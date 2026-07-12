@@ -1,0 +1,269 @@
+{
+  "roles": [
+    {
+      "_id": "686500000000000000000001",
+      "name": "Admin",
+      "permissions": ["*"]
+    },
+    {
+      "_id": "686500000000000000000002",
+      "name": "Fleet Manager",
+      "permissions": [
+        "vehicle.manage",
+        "driver.manage",
+        "trip.manage"
+      ]
+    },
+    {
+      "_id": "686500000000000000000003",
+      "name": "Driver",
+      "permissions": [
+        "trip.view",
+        "trip.update"
+      ]
+    },
+    {
+      "_id": "686500000000000000000004",
+      "name": "Safety Officer",
+      "permissions": [
+        "maintenance.manage",
+        "vehicle.inspect"
+      ]
+    },
+    {
+      "_id": "686500000000000000000005",
+      "name": "Financial Analyst",
+      "permissions": [
+        "expense.manage",
+        "fuel.manage",
+        "reports.view"
+      ]
+    }
+  ],
+
+  "users": [
+    {
+      "_id": "686510000000000000000001",
+      "name": "System Administrator",
+      "email": "admin@transitops.com",
+      "password": "$2b$10$ReplaceWithBcryptHash",
+      "role": "686500000000000000000001",
+      "phone": "9876543210",
+      "status": "Active",
+      "createdAt": "2026-07-12T10:00:00Z"
+    },
+    {
+      "_id": "686510000000000000000002",
+      "name": "Rahul Sharma",
+      "email": "fleet@transitops.com",
+      "password": "$2b$10$ReplaceWithBcryptHash",
+      "role": "686500000000000000000002",
+      "phone": "9876543211",
+      "status": "Active",
+      "createdAt": "2026-07-12T10:10:00Z"
+    },
+    {
+      "_id": "686510000000000000000003",
+      "name": "Amit Kumar",
+      "email": "driver@transitops.com",
+      "password": "$2b$10$ReplaceWithBcryptHash",
+      "role": "686500000000000000000003",
+      "phone": "9876543212",
+      "status": "Active",
+      "createdAt": "2026-07-12T10:15:00Z"
+    }
+  ],
+
+  "vehicles": [
+    {
+      "_id": "686520000000000000000001",
+      "registrationNumber": "MH12AB1234",
+      "vehicleType": "Truck",
+      "brand": "Tata",
+      "model": "Prima",
+      "year": 2023,
+      "capacityKg": 18000,
+      "fuelType": "Diesel",
+      "odometer": 48250,
+      "status": "Available",
+      "insuranceExpiry": "2027-03-20",
+      "fitnessExpiry": "2027-01-15",
+      "assignedDriver": "686530000000000000000001",
+      "createdBy": "686510000000000000000001"
+    },
+    {
+      "_id": "686520000000000000000002",
+      "registrationNumber": "MH14CD9876",
+      "vehicleType": "Mini Truck",
+      "brand": "Ashok Leyland",
+      "model": "Dost",
+      "year": 2022,
+      "capacityKg": 4000,
+      "fuelType": "Diesel",
+      "odometer": 29100,
+      "status": "On Trip",
+      "insuranceExpiry": "2026-12-15",
+      "fitnessExpiry": "2027-04-10",
+      "assignedDriver": "686530000000000000000002",
+      "createdBy": "686510000000000000000002"
+    },
+    {
+      "_id": "686520000000000000000003",
+      "registrationNumber": "MH20EF6543",
+      "vehicleType": "Bus",
+      "brand": "Volvo",
+      "model": "9400",
+      "year": 2021,
+      "capacityKg": 25000,
+      "fuelType": "Diesel",
+      "odometer": 78500,
+      "status": "In Shop",
+      "insuranceExpiry": "2026-11-20",
+      "fitnessExpiry": "2026-10-15",
+      "assignedDriver": null,
+      "createdBy": "686510000000000000000001"
+    }
+  ],
+
+  "drivers": [
+    {
+      "_id": "686530000000000000000001",
+      "name": "Amit Kumar",
+      "licenseNumber": "DL987654321",
+      "licenseExpiry": "2028-05-10",
+      "phone": "9991112233",
+      "experience": 6,
+      "status": "Available",
+      "address": "Pune"
+    },
+    {
+      "_id": "686530000000000000000002",
+      "name": "Rohit Singh",
+      "licenseNumber": "DL123456789",
+      "licenseExpiry": "2027-09-18",
+      "phone": "9991114455",
+      "experience": 9,
+      "status": "On Trip",
+      "address": "Mumbai"
+    },
+    {
+      "_id": "686530000000000000000003",
+      "name": "Vikas Patil",
+      "licenseNumber": "DL555888999",
+      "licenseExpiry": "2025-08-30",
+      "phone": "9992223344",
+      "experience": 4,
+      "status": "Unavailable",
+      "address": "Nagpur"
+    }
+  ],
+
+  "trips": [
+    {
+      "_id": "686540000000000000000001",
+      "tripNumber": "TRIP1001",
+      "vehicle": "686520000000000000000002",
+      "driver": "686530000000000000000002",
+      "source": "Mumbai",
+      "destination": "Pune",
+      "cargoWeightKg": 3500,
+      "distanceKm": 160,
+      "fuelUsed": 22,
+      "fuelCost": 2310,
+      "tollCost": 450,
+      "otherExpense": 300,
+      "operationalCost": 3060,
+      "status": "In Progress",
+      "startDate": "2026-07-12T08:00:00Z"
+    }
+  ],
+
+  "maintenanceLogs": [
+    {
+      "_id": "686550000000000000000001",
+      "vehicle": "686520000000000000000003",
+      "maintenanceType": "Engine Service",
+      "description": "Oil leakage inspection",
+      "cost": 15000,
+      "serviceCenter": "Volvo Service Center",
+      "status": "Open",
+      "maintenanceDate": "2026-07-10",
+      "expectedCompletion": "2026-07-15"
+    }
+  ],
+
+  "fuelLogs": [
+    {
+      "_id": "686560000000000000000001",
+      "vehicle": "686520000000000000000002",
+      "trip": "686540000000000000000001",
+      "fuelQuantity": 22,
+      "fuelPricePerLiter": 105,
+      "totalCost": 2310,
+      "fuelStation": "Indian Oil",
+      "filledBy": "686510000000000000000002",
+      "date": "2026-07-12"
+    }
+  ],
+
+  "expenses": [
+    {
+      "_id": "686570000000000000000001",
+      "trip": "686540000000000000000001",
+      "vehicle": "686520000000000000000002",
+      "expenseType": "Toll",
+      "amount": 450,
+      "description": "Express Highway Toll",
+      "createdBy": "686510000000000000000002",
+      "date": "2026-07-12"
+    },
+    {
+      "_id": "686570000000000000000002",
+      "trip": "686540000000000000000001",
+      "vehicle": "686520000000000000000002",
+      "expenseType": "Food",
+      "amount": 300,
+      "description": "Driver Meal",
+      "createdBy": "686510000000000000000002",
+      "date": "2026-07-12"
+    }
+  ],
+
+  "notifications": [
+    {
+      "_id": "686580000000000000000001",
+      "title": "Maintenance Due",
+      "message": "Vehicle MH20EF6543 is currently under maintenance.",
+      "type": "Maintenance",
+      "isRead": false,
+      "createdAt": "2026-07-12T09:30:00Z"
+    },
+    {
+      "_id": "686580000000000000000002",
+      "title": "Trip Started",
+      "message": "Trip TRIP1001 has started.",
+      "type": "Trip",
+      "isRead": false,
+      "createdAt": "2026-07-12T08:10:00Z"
+    }
+  ],
+
+  "activityLogs": [
+    {
+      "_id": "686590000000000000000001",
+      "user": "686510000000000000000001",
+      "action": "Vehicle Created",
+      "entity": "Vehicle",
+      "entityId": "686520000000000000000003",
+      "timestamp": "2026-07-12T07:45:00Z"
+    },
+    {
+      "_id": "686590000000000000000002",
+      "user": "686510000000000000000002",
+      "action": "Trip Created",
+      "entity": "Trip",
+      "entityId": "686540000000000000000001",
+      "timestamp": "2026-07-12T08:00:00Z"
+    }
+  ]
+}
