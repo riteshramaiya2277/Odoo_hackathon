@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaUserEdit, FaHistory, FaCreditCard, FaMapMarkerAlt, FaSignOutAlt } from 'react-icons/fa';
+import { ArrowLeft, User, MapPin, CreditCard, Clock, LogOut, ChevronRight, Star } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
 
 const Profile = () => {
@@ -13,61 +13,67 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-black text-white p-6 pt-12 pb-24 relative rounded-b-3xl">
-        <button onClick={() => navigate(-1)} className="absolute top-6 left-6 p-2">
-          <FaArrowLeft size={20} />
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="bg-white px-4 py-4 flex items-center shadow-sm z-20 sticky top-0">
+        <button onClick={() => navigate(-1)} className="p-2 mr-4 rounded-full hover:bg-gray-100 transition-colors">
+          <ArrowLeft className="w-6 h-6 text-black" />
         </button>
-        <h1 className="text-center text-xl font-bold">Profile</h1>
+        <h1 className="text-xl font-bold tracking-tight">Account</h1>
       </div>
 
-      <div className="px-6 -mt-16 relative z-10">
-        <div className="bg-white rounded-2xl p-6 shadow-md flex flex-col items-center mb-6">
-          <img 
-            src={`https://ui-avatars.com/api/?name=${user?.fullName || 'User'}&background=random`} 
-            alt="Profile" 
-            className="w-24 h-24 rounded-full border-4 border-white shadow -mt-16 mb-4"
+      <div className="px-6 py-8">
+        <div className="flex items-center gap-6 mb-10">
+          <img
+            src={`https://ui-avatars.com/api/?name=${user?.fullName || 'User'}&background=random&size=200`}
+            alt="Profile"
+            className="w-20 h-20 rounded-full object-cover shadow-sm"
           />
-          <h2 className="text-2xl font-bold">{user?.fullName || 'Guest User'}</h2>
-          <p className="text-gray-500 mb-4">{user?.email || 'guest@example.com'}</p>
-          <div className="flex gap-2">
-            <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700">{user?.role || 'Rider'}</span>
-            <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700">{user?.phone || 'No Phone'}</span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-4 border-b flex items-center gap-4 cursor-pointer hover:bg-gray-50">
-            <div className="bg-blue-50 p-3 rounded-full text-blue-600"><FaUserEdit size={20} /></div>
-            <div className="flex-1">
-              <h3 className="font-bold text-gray-800">Edit Profile</h3>
-            </div>
-          </div>
-          <div className="p-4 border-b flex items-center gap-4 cursor-pointer hover:bg-gray-50">
-            <div className="bg-green-50 p-3 rounded-full text-green-600"><FaMapMarkerAlt size={20} /></div>
-            <div className="flex-1">
-              <h3 className="font-bold text-gray-800">Saved Places</h3>
-            </div>
-          </div>
-          <div className="p-4 border-b flex items-center gap-4 cursor-pointer hover:bg-gray-50">
-            <div className="bg-purple-50 p-3 rounded-full text-purple-600"><FaCreditCard size={20} /></div>
-            <div className="flex-1">
-              <h3 className="font-bold text-gray-800">Payment Methods</h3>
-            </div>
-          </div>
-          <div className="p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-50">
-            <div className="bg-orange-50 p-3 rounded-full text-orange-600"><FaHistory size={20} /></div>
-            <div className="flex-1">
-              <h3 className="font-bold text-gray-800">Ride History</h3>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{user?.fullName || 'Guest User'}</h2>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="bg-gray-100 px-2 py-0.5 rounded text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                <Star className="w-3 h-3 inline-block mr-1 text-black fill-current" /> 5.0
+              </span>
             </div>
           </div>
         </div>
 
-        <button 
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-4">
+              <User className="w-6 h-6 text-black" />
+              <h3 className="font-semibold text-gray-900 text-lg">Edit Account</h3>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </div>
+          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-4">
+              <MapPin className="w-6 h-6 text-black" />
+              <h3 className="font-semibold text-gray-900 text-lg">Saved Places</h3>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </div>
+          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-4">
+              <CreditCard className="w-6 h-6 text-black" />
+              <h3 className="font-semibold text-gray-900 text-lg">Payment</h3>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </div>
+          <div className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-4">
+              <Clock className="w-6 h-6 text-black" />
+              <h3 className="font-semibold text-gray-900 text-lg">Trips</h3>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </div>
+        </div>
+
+        <button
           onClick={handleLogout}
-          className="w-full bg-white text-red-500 font-bold p-4 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-colors"
+          className="w-full bg-white text-black border border-gray-200 font-semibold p-4 rounded-xl shadow-sm flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors active:scale-[0.98]"
         >
-          <FaSignOutAlt /> Log Out
+          <LogOut className="w-5 h-5" /> Sign Out
         </button>
       </div>
     </div>

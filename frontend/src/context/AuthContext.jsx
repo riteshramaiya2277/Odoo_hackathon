@@ -26,11 +26,22 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setError(null);
     try {
-      const res = await api.post('/auth/login', { email, password });
-      setUser(res.data.user);
-      return res.data.user;
+      // Mock login for demo purposes
+      if (email === 'demo@uber.com' && password === 'password123') {
+        const mockUser = {
+          id: '1',
+          fullName: 'Demo User',
+          email: 'demo@uber.com',
+          role: 'Rider',
+          phone: '+1 234 567 8900'
+        };
+        setUser(mockUser);
+        return mockUser;
+      } else {
+        throw new Error('Invalid email or password. Use demo@uber.com / password123');
+      }
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.message || 'Login failed');
       throw err;
     }
   };

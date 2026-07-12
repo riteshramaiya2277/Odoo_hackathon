@@ -18,12 +18,22 @@ import RideCompleted from './pages/RideCompleted';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 
+// Fleet & Admin Features
+import CreateTrip from './pages/CreateTrip';
+import Drivers from './pages/Drivers';
+import FuelExpenses from './pages/FuelExpenses';
+import Maintenance from './pages/Maintenance';
+import Reports from './pages/Reports';
+import Trips from './pages/Trips';
+import Vehicles from './pages/Vehicles';
+
 function App() {
   return (
     <AuthProvider>
       <TripProvider>
         <Router>
           <Routes>
+            {/* Rider Flow */}
             <Route path="/" element={<Splash />} />
             <Route path="/welcome" element={<Welcome />} />
             <Route path="/login" element={<Login />} />
@@ -36,7 +46,17 @@ function App() {
             <Route path="/tracking" element={<RideTracking />} />
             <Route path="/completed" element={<RideCompleted />} />
             <Route path="/profile" element={<Profile />} />
+            
+            {/* Admin & Fleet Management */}
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create-trip" element={<CreateTrip />} />
+            <Route path="/drivers" element={<Drivers />} />
+            <Route path="/fuel" element={<FuelExpenses />} />
+            <Route path="/maintenance" element={<Maintenance />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/trips" element={<Trips />} />
+            <Route path="/vehicles" element={<Vehicles />} />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>

@@ -1,56 +1,21 @@
-import React, { useCallback, useState } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import React from 'react';
 
-const containerStyle = {
-  width: '100%',
-  height: '100vh'
-};
-
-const defaultCenter = {
-  lat: 19.0760, // Mumbai coordinates
-  lng: 72.8777
-};
-
-const MapComponent = ({ pickupLocation, destinationLocation, showDirections }) => {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: "" // Empty string will show development map
-  });
-
-  const [map, setMap] = useState(null);
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-
-  const onLoad = useCallback(function callback(map) {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-
-  // In a real app, you would use DirectionsService to get the route based on pickup/destination
-  // For this demo, we just show markers if provided
-
-  return isLoaded ? (
-    <div className="absolute inset-0 z-0">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={defaultCenter}
-        zoom={13}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        options={{
-          zoomControl: false,
-          streetViewControl: false,
-          mapTypeControl: false,
-          fullscreenControl: false,
+const MapComponent = ({ pickupLocation, destinationLocation }) => {
+  return (
+    <div className="absolute inset-0 z-0 bg-gray-200">
+      <div 
+        className="w-full h-full bg-cover bg-center"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80')`,
+          filter: 'grayscale(100%) opacity(70%)'
         }}
-      >
-        {pickupLocation && <Marker position={defaultCenter} label="P" />}
-        {/* Mocking route/destination for demo */}
-      </GoogleMap>
+      />
+      {/* Decorative center marker */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <div className="w-4 h-4 bg-black rounded-full border-2 border-white shadow-lg animate-pulse" />
+      </div>
     </div>
-  ) : <div className="absolute inset-0 z-0 bg-gray-200 animate-pulse flex items-center justify-center">Loading Map...</div>;
+  );
 };
 
 export default React.memo(MapComponent);

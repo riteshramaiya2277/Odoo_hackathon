@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaMapMarkerAlt, FaCircle } from 'react-icons/fa';
+import { ArrowLeft, MapPin, Search } from 'lucide-react';
 import useTrip from '../hooks/useTrip';
 
 const RideSearch = () => {
@@ -9,7 +9,6 @@ const RideSearch = () => {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // Focus the destination input on mount
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -25,81 +24,87 @@ const RideSearch = () => {
   };
 
   const mockLocations = [
-    { name: "Mumbai Port", address: "Mumbai, Maharashtra" },
-    { name: "Pune MIDC", address: "Pune, Maharashtra" },
-    { name: "Delhi Hub", address: "New Delhi, Delhi" },
-    { name: "Bangalore IT Park", address: "Bangalore, Karnataka" },
+    { name: "Home", address: "123 Main St, New York" },
+    { name: "Work", address: "456 Tech Park, New York" },
+    { name: "JFK Airport", address: "Queens, NY" },
+    { name: "Central Park", address: "Manhattan, NY" },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <div className="p-4 flex items-center shadow-sm">
-        <button onClick={() => navigate(-1)} className="p-2 mr-2">
-          <FaArrowLeft size={20} />
+      <div className="bg-white px-4 py-4 flex items-center shadow-sm z-20">
+        <button onClick={() => navigate(-1)} className="p-2 mr-4 rounded-full hover:bg-gray-100 transition-colors">
+          <ArrowLeft className="w-6 h-6 text-black" />
         </button>
-        <h1 className="text-xl font-bold">Plan Trip</h1>
+        <h1 className="text-xl font-bold tracking-tight">Plan your ride</h1>
       </div>
 
       {/* Search Inputs */}
-      <div className="px-6 py-4 relative shadow-sm">
-        <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-gray-300"></div>
+      <div className="bg-white px-6 pb-6 shadow-sm z-10 relative">
+        <div className="absolute left-9 top-6 bottom-8 w-[2px] bg-gray-200"></div>
         
         <div className="flex items-center gap-4 mb-4 relative z-10">
-          <div className="bg-white p-1"><FaCircle size={12} className="text-gray-400" /></div>
-          <input 
-            type="text" 
-            placeholder="Pickup location" 
-            value={pickup}
-            onChange={(e) => setPickup(e.target.value)}
-            className="w-full bg-gray-100 p-3 rounded-lg outline-none focus:bg-gray-200 transition-colors"
-          />
+          <div className="bg-gray-200 p-1 rounded-full border-4 border-white"><div className="w-2 h-2 bg-black rounded-full" /></div>
+          <div className="flex-1 bg-gray-100 rounded-xl flex items-center px-4 py-3 focus-within:ring-2 focus-within:ring-black transition-all">
+            <input 
+              type="text" 
+              placeholder="Choose your pickup point" 
+              value={pickup}
+              onChange={(e) => setPickup(e.target.value)}
+              className="w-full bg-transparent outline-none text-gray-900 placeholder-gray-500 font-medium"
+            />
+          </div>
         </div>
         
         <div className="flex items-center gap-4 relative z-10">
-          <div className="bg-white p-1"><FaMapMarkerAlt size={14} className="text-black" /></div>
-          <input 
-            ref={inputRef}
-            type="text" 
-            placeholder="Where to?" 
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            className="w-full bg-gray-100 p-3 rounded-lg outline-none focus:bg-gray-200 transition-colors"
-          />
+          <div className="bg-black p-1 rounded-sm border-4 border-white"><div className="w-2 h-2 bg-white" /></div>
+          <div className="flex-1 bg-gray-100 rounded-xl flex items-center px-4 py-3 focus-within:ring-2 focus-within:ring-black transition-all">
+            <input 
+              ref={inputRef}
+              type="text" 
+              placeholder="Where to?" 
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              className="w-full bg-transparent outline-none text-gray-900 placeholder-gray-500 font-medium"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Suggested Locations */}
+      <div className="flex-1 bg-white mt-2 px-6 py-4 overflow-y-auto">
+        <h3 className="font-semibold text-gray-900 mb-4 text-lg">Recent places</h3>
+        <div className="flex flex-col">
+          {mockLocations.map((loc, i) => (
+            <div 
+              key={i} 
+              className="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50 transition-colors"
+              onClick={() => {
+                if (!pickup) setPickup(loc.name);
+                else setDestination(loc.name);
+              }}
+            >
+              <div className="bg-gray-100 p-3 rounded-full">
+                <MapPin className="w-5 h-5 text-black" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-bold text-gray-900 text-lg">{loc.name}</h4>
+                <p className="text-sm text-gray-500 line-clamp-1">{loc.address}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Action Button */}
-      <div className="p-6">
+      <div className="p-4 bg-white border-t border-gray-100">
         <button 
           onClick={handleSearch}
-          className="w-full bg-black text-white font-bold text-lg p-4 rounded-lg"
+          className="btn-primary"
         >
-          Find Vehicles
+          Confirm Route
         </button>
-      </div>
-
-      {/* Suggested Locations */}
-      <div className="px-6 mt-2">
-        <h3 className="font-bold text-gray-500 mb-4">Suggested Terminals</h3>
-        {mockLocations.map((loc, i) => (
-          <div 
-            key={i} 
-            className="flex items-center gap-4 py-3 border-b cursor-pointer hover:bg-gray-50"
-            onClick={() => {
-              if (!pickup) setPickup(loc.name);
-              else setDestination(loc.name);
-            }}
-          >
-            <div className="bg-gray-200 p-2 rounded-full">
-              <FaMapMarkerAlt className="text-gray-600" />
-            </div>
-            <div>
-              <h4 className="font-bold">{loc.name}</h4>
-              <p className="text-sm text-gray-500">{loc.address}</p>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );
