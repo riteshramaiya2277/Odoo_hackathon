@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Share, Navigation } from 'lucide-react';
+import { Shield, Share, Navigation, AlertCircle } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import useTrip from '../hooks/useTrip';
 
 const RideTracking = () => {
   const navigate = useNavigate();
-  const { assignedDriver, assignedVehicle, pickup, destination, setTripStatus } = useTrip();
+  const { assignedDriver, assignedVehicle, pickup, destination, setTripStatus, resetTrip } = useTrip();
   const [progress, setProgress] = useState(0);
   const [etaMinutes, setEtaMinutes] = useState(15);
+  const [safetyModalOpen, setSafetyModalOpen] = useState(false);
 
   useEffect(() => {
     if (!assignedDriver) {
@@ -32,10 +33,54 @@ const RideTracking = () => {
     return () => clearInterval(interval);
   }, [assignedDriver, navigate, setTripStatus]);
 
+  const handleCancelTrip = () => {
+    if (window.confirm('Are you sure you want to cancel this trip?')) {
+      resetTrip();
+      navigate('/home');
+    }
+  };
+
+  const handleShare = () => {
+    const shareText = `I'm on a ride with TransitOps! Driver: ${assignedDriver.name}, Vehicle: ${assignedVehicle?.vehicleName || 'N/A'}. ETA: ${etaMinutes} min.`;
+    if (navigator.share) {
+      navigator.share({
+        title: 'My TransitOps Ride',
+        text: shareText,
+      }).catch(err => console.log('Error sharing:', err));
+    } else {
+      navigator.clipboard.writeText(shareText);
+      alert('Ride details copied to clipboard!');
+    }
+  };
+
   if (!assignedDriver) return null;
 
   return (
     <div className="relative min-h-screen bg-gray-100 flex flex-col overflow-hidden">
+      {safetyModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center pb-4">
+          <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Safety & Support</h3>
+              <button onClick={() => setSafetyModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                <AlertCircle className="w-6 h-6 text-gray-500" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <button className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-700 rounded-xl font-semibold hover:bg-red-100 transition-colors">
+                <AlertCircle className="w-5 h-5" /> Emergency Help
+              </button>
+              <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-700 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+                <Shield className="w-5 h-5" /> Safety Tips
+              </button>
+              <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-700 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+                <Navigation className="w-5 h-5" /> Contact Support
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 relative">
         <MapComponent pickupLocation={pickup} destinationLocation={destination} />
         
@@ -79,10 +124,16 @@ const RideTracking = () => {
               </div>
           </div>
           <div className="flex gap-2">
-             <button className="p-3.5 bg-gray-50 rounded-full text-gray-700 hover:bg-gray-200 transition-colors">
+             <button 
+                className="p-3.5 bg-gray-50 rounded-full text-gray-700 hover:bg-gray-200 transition-colors"
+                onClick={() => setSafetyModalOpen(true)}
+             >
                <Shield className="w-5 h-5" />
              </button>
-             <button className="p-3.5 bg-gray-50 rounded-full text-gray-700 hover:bg-gray-200 transition-colors">
+             <button 
+                className="p-3.5 bg-gray-50 rounded-full text-gray-700 hover:bg-gray-200 transition-colors"
+                onClick={handleShare}
+             >
                <Share className="w-5 h-5" />
              </button>
           </div>
@@ -91,7 +142,7 @@ const RideTracking = () => {
         <div className="px-4 mt-auto">
           <button 
             className="w-full bg-gray-100 text-red-600 font-semibold py-4 rounded-xl flex items-center justify-center transition-all hover:bg-red-50 active:scale-[0.98]"
-            onClick={() => navigate('/home')}
+            onClick={handleCancelTrip}
           >
             Cancel Trip
           </button>

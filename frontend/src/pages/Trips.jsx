@@ -26,7 +26,13 @@ export default function Trips() {
 
   const onSubmit = async (data) => {
     try {
-      await api.post('/trips', { ...data, status: 'Draft' });
+      const tripData = {
+        ...data,
+        cargoWeightKg: data.cargoWeight || 0,
+        tripNumber: data.tripNumber || `TRP-${Date.now().toString().slice(-6)}`,
+        status: 'Draft'
+      };
+      await api.post('/trips', tripData);
       setIsModalOpen(false);
       reset();
       fetchTrips();

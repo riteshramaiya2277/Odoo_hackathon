@@ -6,14 +6,17 @@ const tripSchema = new mongoose.Schema({
     required: true
   },
   vehicle: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Vehicle',
-    required: true
+    type: mongoose.Schema.Types.Mixed, // Can be ObjectId (admin) or object (rider)
+    default: null
   },
   driver: {
+    type: mongoose.Schema.Types.Mixed, // Can be ObjectId (admin) or object (rider/driver)
+    default: null
+  },
+  driverUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Driver',
-    required: true
+    ref: 'User',
+    default: null
   },
   source: {
     type: String,
@@ -25,39 +28,49 @@ const tripSchema = new mongoose.Schema({
   },
   cargoWeightKg: {
     type: Number,
-    required: true
+    default: 0
   },
   distanceKm: {
     type: Number,
-    required: true
+    default: 0
   },
   fuelUsed: {
     type: Number,
-    required: true
+    default: 0
   },
   fuelCost: {
     type: Number,
-    required: true
+    default: 0
   },
   tollCost: {
     type: Number,
-    required: true
+    default: 0
   },
   otherExpense: {
     type: Number,
-    required: true
+    default: 0
   },
   operationalCost: {
     type: Number,
-    required: true
+    default: 0
+  },
+  price: {
+    type: Number,
+    default: 0
   },
   status: {
     type: String,
-    required: true
+    required: true,
+    enum: ['requested', 'accepted', 'in-progress', 'completed', 'cancelled', 'Draft', 'Dispatched', 'Cancelled']
   },
   startDate: {
-    type: String,
-    required: true
+    type: Date,
+    default: Date.now
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
   }
 });
 

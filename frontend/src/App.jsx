@@ -31,6 +31,10 @@ import DriverAssigned from './pages/DriverAssigned';
 import RideTracking from './pages/RideTracking';
 import RideCompleted from './pages/RideCompleted';
 import Profile from './pages/Profile';
+import EditAccount from './pages/EditAccount';
+import SavedPlaces from './pages/SavedPlaces';
+import Payment from './pages/Payment';
+import UserTrips from './pages/UserTrips';
 
 // Protected Route Components
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -111,6 +115,26 @@ function AppRoutes() {
       <Route path="/profile" element={
         <ProtectedRoute>
           <Profile />
+        </ProtectedRoute>
+      } />
+      <Route path="/edit-account" element={
+        <ProtectedRoute>
+          <EditAccount />
+        </ProtectedRoute>
+      } />
+      <Route path="/saved-places" element={
+        <ProtectedRoute>
+          <SavedPlaces />
+        </ProtectedRoute>
+      } />
+      <Route path="/payment" element={
+        <ProtectedRoute>
+          <Payment />
+        </ProtectedRoute>
+      } />
+      <Route path="/my-trips" element={
+        <ProtectedRoute>
+          <UserTrips />
         </ProtectedRoute>
       } />
 

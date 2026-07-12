@@ -1,9 +1,11 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import api from '../services/api';
+import useAuth from '../hooks/useAuth';
 
 export const TripContext = createContext();
 
 export const TripProvider = ({ children }) => {
+  const { user, loading: authLoading } = useAuth();
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
   const [selectedVehicleType, setSelectedVehicleType] = useState(null);
@@ -12,6 +14,92 @@ export const TripProvider = ({ children }) => {
   const [assignedDriver, setAssignedDriver] = useState(null);
   const [assignedVehicle, setAssignedVehicle] = useState(null);
   const [tripStatus, setTripStatus] = useState('idle'); // idle, searching, assigned, active, completed
+  const [trips, setTrips] = useState([]);
+  const [tripsLoading, setTripsLoading] = useState(false);
+  const [driverTrips, setDriverTrips] = useState([]);
+  const [driverTripsLoading, setDriverTripsLoading] = useState(false);
+
+  const fetchTrips = async () => {
+    if (!user) return;
+    setTripsLoading(true);
+    try {
+      const response = await api.get('/trips/my-trips');
+      setTrips(response.data);
+    } catch (error) {
+      console.error('Error fetching trips:', error);
+    } finally {
+      setTripsLoading(false);
+    }
+  };
+
+  const fetchDriverTrips = async () => {
+    if (!user) return;
+    setDriverTripsLoading(true);
+    try {
+      const response = await api.get('/trips/driver-requests');
+      setDriverTrips(response.data);
+    } catch (error) {
+      console.error('Error fetching driver trips:', error);
+    } finally {
+      setDriverTripsLoading(false);
+    }
+  };
+
+  const addTrip = async (tripData) => {
+    try {
+      const response = await api.post('/trips', tripData);
+      setTrips(prev => [response.data, ...prev]);
+      return response.data;
+    } catch (error) {
+      console.error('Error adding trip:', error);
+      throw error;
+    }
+  };
+
+  const updateTrip = async (id, tripData) => {
+    try {
+      const response = await api.put(`/trips/${id}`, tripData);
+      setTrips(prev => prev.map(t => t._id === id ? response.data : t));
+      setDriverTrips(prev => prev.map(t => t._id === id ? response.data : t));
+      return response.data;
+    } catch (error) {
+      console.error('Error updating trip:', error);
+      throw error;
+    }
+  };
+
+  const acceptTrip = async (id) => {
+    try {
+      const response = await api.post(`/trips/${id}/accept`);
+      setDriverTrips(prev => prev.map(t => t._id === id ? response.data : t));
+      return response.data;
+    } catch (error) {
+      console.error('Error accepting trip:', error);
+      throw error;
+    }
+  };
+
+  const startTrip = async (id) => {
+    try {
+      const response = await api.post(`/trips/${id}/start`);
+      setDriverTrips(prev => prev.map(t => t._id === id ? response.data : t));
+      return response.data;
+    } catch (error) {
+      console.error('Error starting trip:', error);
+      throw error;
+    }
+  };
+
+  const completeTrip = async (id) => {
+    try {
+      const response = await api.post(`/trips/${id}/complete`);
+      setDriverTrips(prev => prev.map(t => t._id === id ? response.data : t));
+      return response.data;
+    } catch (error) {
+      console.error('Error completing trip:', error);
+      throw error;
+    }
+  };
 
   const fetchAvailableOptions = async () => {
     try {
@@ -60,6 +148,17 @@ export const TripProvider = ({ children }) => {
     setTripStatus('idle');
   };
 
+  // Fetch trips when user logs in
+  useEffect(() => {
+    if (user && !authLoading) {
+      fetchTrips();
+      // Check if user is driver and fetch driver trips
+      if (user.role?.name === 'Driver' || user.role?.name === 'Admin') {
+        fetchDriverTrips();
+      }
+    }
+  }, [user, authLoading]);
+
   return (
     <TripContext.Provider value={{
       pickup, setPickup,
@@ -72,7 +171,18 @@ export const TripProvider = ({ children }) => {
       tripStatus, setTripStatus,
       fetchAvailableOptions,
       assignDriverAndVehicle,
-      resetTrip
+      resetTrip,
+      trips,
+      tripsLoading,
+      fetchTrips,
+      addTrip,
+      updateTrip,
+      driverTrips,
+      driverTripsLoading,
+      fetchDriverTrips,
+      acceptTrip,
+      startTrip,
+      completeTrip
     }}>
       {children}
     </TripContext.Provider>

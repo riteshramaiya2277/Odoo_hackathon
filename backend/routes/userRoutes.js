@@ -49,13 +49,27 @@ router.post('/', auth, adminAuth, async (req, res) => {
   }
 });
 
-// PUT update user - Admin only
-router.put('/:id', auth, adminAuth, async (req, res) => {
+// PUT update user - Admin can update any, users can update their own
+router.put('/:id', auth, async (req, res) => {
   try {
+    // Check if user is admin OR updating their own account
+    const isAdmin = req.user.role?.name === 'Admin';
+    const isOwnAccount = req.user._id.toString() === req.params.id;
+    
+    if (!isAdmin && !isOwnAccount) {
+      return res.status(403).json({ message: 'Not authorized to update this user' });
+    }
+
+    // Don't allow non-admins to change role
+    if (!isAdmin) {
+      delete req.body.role;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { 
       new: true, 
       runValidators: true 
     }).populate('role');
+    
     if (!updatedUser) return res.status(404).json({ message: 'User not found' });
     res.json(updatedUser);
   } catch (err) {

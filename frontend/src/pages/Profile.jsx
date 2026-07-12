@@ -24,12 +24,12 @@ const Profile = () => {
       <div className="px-6 py-8">
         <div className="flex items-center gap-6 mb-10">
           <img
-            src={`https://ui-avatars.com/api/?name=${user?.fullName || 'User'}&background=random&size=200`}
+            src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&size=200`}
             alt="Profile"
             className="w-20 h-20 rounded-full object-cover shadow-sm"
           />
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{user?.fullName || 'Guest User'}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{user?.name || 'Guest User'}</h2>
             <div className="flex items-center gap-2 mt-1">
               <span className="bg-gray-100 px-2 py-0.5 rounded text-xs font-semibold text-gray-600 uppercase tracking-wide">
                 <Star className="w-3 h-3 inline-block mr-1 text-black fill-current" /> 5.0
@@ -39,28 +39,28 @@ const Profile = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+          <div onClick={() => navigate('/edit-account')} className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-4">
               <User className="w-6 h-6 text-black" />
               <h3 className="font-semibold text-gray-900 text-lg">Edit Account</h3>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
-          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+          <div onClick={() => navigate('/saved-places')} className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-4">
               <MapPin className="w-6 h-6 text-black" />
               <h3 className="font-semibold text-gray-900 text-lg">Saved Places</h3>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
-          <div className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+          <div onClick={() => navigate('/payment')} className="p-5 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-4">
               <CreditCard className="w-6 h-6 text-black" />
               <h3 className="font-semibold text-gray-900 text-lg">Payment</h3>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
-          <div className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+          <div onClick={() => navigate('/my-trips')} className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-4">
               <Clock className="w-6 h-6 text-black" />
               <h3 className="font-semibold text-gray-900 text-lg">Trips</h3>

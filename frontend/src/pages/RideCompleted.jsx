@@ -2,21 +2,69 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, Star, Download } from 'lucide-react';
 import useTrip from '../hooks/useTrip';
+import { Button } from '../components/UI';
 
 const RideCompleted = () => {
   const navigate = useNavigate();
-  const { assignedDriver, assignedVehicle, pickup, destination, resetTrip } = useTrip();
+  const { assignedDriver, assignedVehicle, pickup, destination, resetTrip, addTrip } = useTrip();
   const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  const handleDone = () => {
-    resetTrip();
-    navigate('/home');
+  const handleDone = async () => {
+    setSaving(true);
+    try {
+      // Create new trip
+      const tripData = {
+        tripNumber: `TRIP-${Date.now().toString().slice(-6)}`,
+        source: pickup,
+        destination: destination,
+        vehicle: assignedVehicle,
+        driver: assignedDriver,
+        price: assignedVehicle?.price || 450,
+        status: 'completed'
+      };
+      await addTrip(tripData);
+      resetTrip();
+      navigate('/home');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to save trip');
+      resetTrip();
+      navigate('/home');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDownloadReceipt = () => {
+    // Create a simple receipt as a text file for demo purposes
+    const receiptText = `
+TRANSITOPS RIDE RECEIPT
+------------------------
+Route: ${pickup} to ${destination}
+Driver: ${assignedDriver?.name || 'N/A'}
+Vehicle: ${assignedVehicle?.vehicleName || 'N/A'}
+Total Fare: ₹${assignedVehicle?.price || 450}
+Rating Given: ${rating} stars
+Feedback: ${feedback || 'No feedback provided'}
+------------------------
+Thank you for riding with us!
+    `.trim();
+
+    const blob = new Blob([receiptText], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'transitops-ride-receipt.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
 
   if (!assignedDriver) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <button className="btn-primary max-w-xs" onClick={() => navigate('/home')}>Go Home</button>
+        <Button onClick={() => navigate('/home')} className="max-w-xs">Go Home</Button>
       </div>
     );
   }
@@ -63,14 +111,29 @@ const RideCompleted = () => {
               </button>
             ))}
           </div>
+          {/* Optional Feedback */}
+          <div className="mt-4">
+            <textarea
+              placeholder="Any feedback for your ride?"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="w-full p-4 bg-gray-50 rounded-xl border border-gray-100 resize-none focus:ring-2 focus:ring-black outline-none transition-all"
+              rows={3}
+            />
+          </div>
         </div>
       </div>
 
       <div className="mt-8 flex flex-col gap-4 pb-4">
-        <button className="flex items-center justify-center gap-2 text-gray-700 font-semibold py-2 hover:text-black transition-colors">
+        <button 
+          onClick={handleDownloadReceipt}
+          className="flex items-center justify-center gap-2 text-gray-700 font-semibold py-2 hover:text-black transition-colors"
+        >
           <Download className="w-5 h-5" /> Download Receipt
         </button>
-        <button className="btn-primary" onClick={handleDone}>Done</button>
+        <Button onClick={handleDone} disabled={saving}>
+          {saving ? 'Saving...' : 'Done'}
+        </Button>
       </div>
     </div>
   );

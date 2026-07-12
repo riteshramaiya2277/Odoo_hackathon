@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Search, Navigation, MapPin, User, Truck, LayoutDashboard, Settings, MoreHorizontal } from 'lucide-react';
+import { Menu, Search, Navigation, MapPin, User, Truck, LayoutDashboard, Settings, Star, Zap, Shield, ArrowRight } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import useAuth from '../hooks/useAuth';
 
@@ -81,6 +81,16 @@ const MobileSidebar = ({ isOpen, onClose }) => {
   );
 };
 
+const FeatureCard = ({ icon: Icon, title, description }) => (
+  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
+      <Icon className="w-6 h-6 text-blue-600" />
+    </div>
+    <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
+    <p className="text-sm text-gray-500">{description}</p>
+  </div>
+);
+
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -93,18 +103,18 @@ const Home = () => {
         <MapComponent />
       </div>
 
-      {/* Top Bar */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10 pointer-events-none">
+      {/* Navbar */}
+      <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-[100]">
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="bg-white p-3 rounded-full shadow-lg pointer-events-auto transition-transform active:scale-95"
+          className="bg-white p-3 rounded-full shadow-lg transition-transform active:scale-95 hover:bg-gray-50"
         >
           <Menu className="w-6 h-6 text-black" />
         </button>
         
         <button
           onClick={() => navigate('/profile')}
-          className="bg-white p-3 rounded-full shadow-lg pointer-events-auto transition-transform active:scale-95"
+          className="bg-white p-3 rounded-full shadow-lg transition-transform active:scale-95 hover:bg-gray-50"
         >
           <User className="w-6 h-6 text-black" />
         </button>
@@ -112,57 +122,90 @@ const Home = () => {
 
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* Bottom Sheet */}
-      <div className="bottom-sheet flex flex-col">
-        <div className="flex justify-center mb-2">
-          <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
-        </div>
-        
-        <div className="mb-4 text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}, {user ? user.fullName?.split(' ')[0] : 'User'}
-          </h2>
-        </div>
-
-        {/* Show admin quick links only if user is admin */}
-        {user?.role?.name === 'Admin' && (
-          <div className="flex justify-between items-start mb-6 px-2">
-            {[
-              { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-              { icon: Truck, label: 'Fleet', path: '/vehicles' },
-              { icon: Settings, label: 'Settings', path: '/settings' },
-            ].map((link, i) => (
-              <button 
-                key={i} 
-                onClick={() => navigate(link.path)}
-                className="flex flex-col items-center gap-2 group focus:outline-none"
-              >
-                <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                  <link.icon className="w-6 h-6 text-black" />
-                </div>
-                <span className="text-xs font-semibold text-gray-600">{link.label}</span>
-              </button>
-            ))}
+      {/* Main Content */}
+      <div className="relative z-10 flex-1 flex flex-col justify-end">
+        {/* Bottom Sheet */}
+        <div className="bottom-sheet flex flex-col">
+          <div className="flex justify-center mb-2">
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
           </div>
-        )}
+          
+          {/* Hero Section */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
+              Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}, {user ? user.fullName?.split(' ')[0] : 'User'}!
+            </h1>
+            <p className="text-gray-600">Ready for your next ride?</p>
+          </div>
 
-        <div
-          onClick={() => navigate('/search')}
-          className="bg-gray-100 rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-200 transition-colors mb-4"
-        >
-          <Search className="w-6 h-6 text-black" />
-          <span className="text-xl font-bold text-gray-800">Where to?</span>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-            <div className="bg-gray-200 p-2.5 rounded-full">
-              <Navigation className="w-5 h-5 text-black" />
+          {/* Show admin quick links only if user is admin */}
+          {user?.role?.name === 'Admin' && (
+            <div className="flex justify-between items-start mb-6 px-2">
+              {[
+                { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+                { icon: Truck, label: 'Fleet', path: '/vehicles' },
+                { icon: Settings, label: 'Settings', path: '/settings' },
+              ].map((link, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => navigate(link.path)}
+                  className="flex flex-col items-center gap-2 group focus:outline-none"
+                >
+                  <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <link.icon className="w-6 h-6 text-black" />
+                  </div>
+                  <span className="text-xs font-semibold text-gray-600">{link.label}</span>
+                </button>
+              ))}
             </div>
-            <div className="border-b border-gray-100 flex-1 pb-3">
+          )}
+
+          {/* Where To Button */}
+          <div
+            onClick={() => navigate('/search')}
+            className="bg-black text-white rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:bg-gray-800 transition-colors mb-6 shadow-lg"
+          >
+            <Search className="w-6 h-6" />
+            <span className="text-xl font-bold">Where to?</span>
+            <ArrowRight className="w-5 h-5 ml-auto" />
+          </div>
+
+          {/* Current Location */}
+          <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 mb-6 cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="bg-blue-100 p-3 rounded-full">
+              <Navigation className="w-5 h-5 text-blue-600" />
+            </div>
+            <div className="flex-1">
               <h3 className="font-semibold text-gray-900 text-lg">Current Location</h3>
               <p className="text-sm text-gray-500">Pick up from here</p>
             </div>
+          </div>
+
+          {/* Features Section */}
+          <div className="mb-4">
+            <h3 className="font-bold text-gray-900 mb-4">Why choose us?</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <FeatureCard 
+                icon={Star}
+                title="Rated 4.9"
+                description="Best in class service"
+              />
+              <FeatureCard 
+                icon={Zap}
+                title="Quick Pickup"
+                description="Arrives in minutes"
+              />
+              <FeatureCard 
+                icon={Shield}
+                title="Safe & Secure"
+                description="Your safety first"
+              />
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center text-xs text-gray-400 pt-4">
+            © 2024 TransitOps. All rights reserved.
           </div>
         </div>
       </div>
