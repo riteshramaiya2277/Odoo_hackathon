@@ -1,0 +1,25 @@
+[
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "tripId": "TRIP_OBJECT_ID",
+    "expenseType": "Toll",
+    "amount": 450,
+    "description": "Mumbai Expressway Toll",
+    "expenseDate": "2026-07-10"
+  },
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "tripId": "TRIP_OBJECT_ID",
+    "expenseType": "Parking",
+    "amount": 200,
+    "description": "Warehouse Parking",
+    "expenseDate": "2026-07-10"
+  },
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "expenseType": "Maintenance",
+    "amount": 3500,
+    "description": "Oil Change",
+    "expenseDate": "2026-07-06"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "registrationNumber": "MH12AB1234",
+    "vehicleName": "Tata Ace",
+    "vehicleType": "Mini Truck",
+    "maxLoadCapacity": 750,
+    "odometer": 45000,
+    "acquisitionCost": 650000,
+    "region": "Mumbai",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH14CD5678",
+    "vehicleName": "Ashok Leyland",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 5000,
+    "odometer": 120000,
+    "acquisitionCost": 2500000,
+    "region": "Pune",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH20EF9012",
+    "vehicleName": "Mahindra Bolero Pickup",
+    "vehicleType": "Pickup",
+    "maxLoadCapacity": 1200,
+    "odometer": 67000,
+    "acquisitionCost": 950000,
+    "region": "Nagpur",
+    "status": "In Shop"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "source": "Mumbai",
+    "destination": "Pune",
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "driverId": "DRIVER_OBJECT_ID",
+    "cargoWeight": 600,
+    "plannedDistance": 150,
+    "actualDistance": 148,
+    "fuelConsumed": 18,
+    "revenue": 15000,
+    "tripStatus": "Completed",
+    "dispatchDate": "2026-07-10T09:00:00Z",
+    "completionDate": "2026-07-10T13:00:00Z",
+    "remarks": "Delivered successfully."
+  },
+  {
+    "source": "Pune",
+    "destination": "Nashik",
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "driverId": "DRIVER_OBJECT_ID",
+    "cargoWeight": 450,
+    "plannedDistance": 210,
+    "tripStatus": "Dispatched",
+    "dispatchDate": "2026-07-12T08:30:00Z",
+    "remarks": "Currently in transit."
+  }
+]

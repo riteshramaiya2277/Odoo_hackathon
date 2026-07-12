@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Alex Johnson",
+    "licenseNumber": "DL123456789",
+    "licenseCategory": "HMV",
+    "licenseExpiryDate": "2028-12-31",
+    "contactNumber": "9876500001",
+    "safetyScore": 96,
+    "status": "Available"
+  },
+  {
+    "name": "John Smith",
+    "licenseNumber": "DL987654321",
+    "licenseCategory": "LMV",
+    "licenseExpiryDate": "2027-08-15",
+    "contactNumber": "9876500002",
+    "safetyScore": 91,
+    "status": "On Trip"
+  },
+  {
+    "name": "David Lee",
+    "licenseNumber": "DL112233445",
+    "licenseCategory": "HMV",
+    "licenseExpiryDate": "2024-02-10",
+    "contactNumber": "9876500003",
+    "safetyScore": 78,
+    "status": "Suspended"
+  }
+]

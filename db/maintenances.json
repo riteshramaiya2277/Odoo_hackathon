@@ -1,0 +1,19 @@
+[
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "maintenanceType": "Oil Change",
+    "description": "Engine oil replacement",
+    "maintenanceCost": 3500,
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-06",
+    "status": "Completed"
+  },
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "maintenanceType": "Brake Service",
+    "description": "Brake pad replacement",
+    "maintenanceCost": 8000,
+    "startDate": "2026-07-11",
+    "status": "Active"
+  }
+]

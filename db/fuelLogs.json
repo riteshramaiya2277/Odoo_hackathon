@@ -1,0 +1,18 @@
+[
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "tripId": "TRIP_OBJECT_ID",
+    "liters": 18,
+    "cost": 1850,
+    "date": "2026-07-10",
+    "odometerReading": 45148
+  },
+  {
+    "vehicleId": "VEHICLE_OBJECT_ID",
+    "tripId": "TRIP_OBJECT_ID",
+    "liters": 42,
+    "cost": 4320,
+    "date": "2026-07-11",
+    "odometerReading": 120450
+  }
+]
