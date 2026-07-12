@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Driver = require('../models/Driver');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// GET all drivers
-router.get('/', async (req, res) => {
+// GET all drivers - Admin only
+router.get('/', auth, adminAuth, async (req, res) => {
   try {
     const drivers = await Driver.find();
     res.json(drivers);
@@ -12,8 +13,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single driver
-router.get('/:id', async (req, res) => {
+// GET single driver - Admin only
+router.get('/:id', auth, adminAuth, async (req, res) => {
   try {
     const driver = await Driver.findById(req.params.id);
     if (!driver) return res.status(404).json({ message: 'Driver not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new driver
-router.post('/', async (req, res) => {
+// POST new driver - Admin only
+router.post('/', auth, adminAuth, async (req, res) => {
   const driver = new Driver(req.body);
   try {
     const newDriver = await driver.save();
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update driver
-router.put('/:id', async (req, res) => {
+// PUT update driver - Admin only
+router.put('/:id', auth, adminAuth, async (req, res) => {
   try {
     const updatedDriver = await Driver.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedDriver) return res.status(404).json({ message: 'Driver not found' });
@@ -45,8 +46,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE driver
-router.delete('/:id', async (req, res) => {
+// DELETE driver - Admin only
+router.delete('/:id', auth, adminAuth, async (req, res) => {
   try {
     const driver = await Driver.findByIdAndDelete(req.params.id);
     if (!driver) return res.status(404).json({ message: 'Driver not found' });

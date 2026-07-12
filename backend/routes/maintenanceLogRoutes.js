@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const MaintenanceLog = require('../models/MaintenanceLog');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// GET all maintenance logs
-router.get('/', async (req, res) => {
+// GET all maintenance logs - Admin only
+router.get('/', auth, adminAuth, async (req, res) => {
   try {
     const maintenanceLogs = await MaintenanceLog.find().populate('vehicle');
     res.json(maintenanceLogs);
@@ -12,8 +13,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single maintenance log
-router.get('/:id', async (req, res) => {
+// GET single maintenance log - Admin only
+router.get('/:id', auth, adminAuth, async (req, res) => {
   try {
     const maintenanceLog = await MaintenanceLog.findById(req.params.id).populate('vehicle');
     if (!maintenanceLog) return res.status(404).json({ message: 'Log not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new maintenance log
-router.post('/', async (req, res) => {
+// POST new maintenance log - Admin only
+router.post('/', auth, adminAuth, async (req, res) => {
   const maintenanceLog = new MaintenanceLog(req.body);
   try {
     const newLog = await maintenanceLog.save();
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update maintenance log
-router.put('/:id', async (req, res) => {
+// PUT update maintenance log - Admin only
+router.put('/:id', auth, adminAuth, async (req, res) => {
   try {
     const updatedLog = await MaintenanceLog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedLog) return res.status(404).json({ message: 'Log not found' });
@@ -45,8 +46,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE maintenance log
-router.delete('/:id', async (req, res) => {
+// DELETE maintenance log - Admin only
+router.delete('/:id', auth, adminAuth, async (req, res) => {
   try {
     const log = await MaintenanceLog.findByIdAndDelete(req.params.id);
     if (!log) return res.status(404).json({ message: 'Log not found' });

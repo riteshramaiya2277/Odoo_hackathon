@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const FuelLog = require('../models/FuelLog');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// GET all fuel logs
-router.get('/', async (req, res) => {
+// GET all fuel logs - Admin only
+router.get('/', auth, adminAuth, async (req, res) => {
   try {
     const fuelLogs = await FuelLog.find().populate('vehicle').populate('trip').populate('filledBy');
     res.json(fuelLogs);
@@ -12,8 +13,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single fuel log
-router.get('/:id', async (req, res) => {
+// GET single fuel log - Admin only
+router.get('/:id', auth, adminAuth, async (req, res) => {
   try {
     const fuelLog = await FuelLog.findById(req.params.id).populate('vehicle').populate('trip').populate('filledBy');
     if (!fuelLog) return res.status(404).json({ message: 'Log not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new fuel log
-router.post('/', async (req, res) => {
+// POST new fuel log - Admin only
+router.post('/', auth, adminAuth, async (req, res) => {
   const fuelLog = new FuelLog(req.body);
   try {
     const newLog = await fuelLog.save();
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update fuel log
-router.put('/:id', async (req, res) => {
+// PUT update fuel log - Admin only
+router.put('/:id', auth, adminAuth, async (req, res) => {
   try {
     const updatedLog = await FuelLog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedLog) return res.status(404).json({ message: 'Log not found' });
@@ -45,8 +46,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE fuel log
-router.delete('/:id', async (req, res) => {
+// DELETE fuel log - Admin only
+router.delete('/:id', auth, adminAuth, async (req, res) => {
   try {
     const log = await FuelLog.findByIdAndDelete(req.params.id);
     if (!log) return res.status(404).json({ message: 'Log not found' });

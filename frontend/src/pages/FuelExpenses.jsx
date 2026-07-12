@@ -5,23 +5,31 @@ import api from '../services/api';
 
 export default function FuelExpenses() {
   const [logs, setLogs] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  const fetchLogs = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get('/fuelLogs');
-      setLogs(res.data);
+      const [logsRes, vehiclesRes, tripsRes] = await Promise.all([
+        api.get('/fuelLogs'),
+        api.get('/vehicles'),
+        api.get('/trips')
+      ]);
+      setLogs(logsRes.data);
+      setVehicles(vehiclesRes.data);
+      setTrips(tripsRes.data);
     } catch (error) {
-      console.error('Error fetching fuel logs:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchLogs();
+    fetchData();
   }, []);
 
   const onSubmit = async (data) => {
@@ -29,7 +37,7 @@ export default function FuelExpenses() {
       await api.post('/fuelLogs', data);
       setIsModalOpen(false);
       reset();
-      fetchLogs();
+      fetchData();
     } catch (err) {
       console.error('Failed to add log:', err);
       alert('Failed to add log');
@@ -37,8 +45,8 @@ export default function FuelExpenses() {
   };
 
   // Calculate some simple stats
-  const totalLiters = logs.reduce((acc, log) => acc + (Number(log.liters) || 0), 0);
-  const totalCost = logs.reduce((acc, log) => acc + (Number(log.cost) || 0), 0);
+  const totalLiters = logs.reduce((acc, log) => acc + (Number(log.fuelQuantity) || 0), 0);
+  const totalCost = logs.reduce((acc, log) => acc + (Number(log.totalCost) || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -46,8 +54,8 @@ export default function FuelExpenses() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Fuel & Expenses</h1>
-          <p className="text-sm text-gray-500 mt-1">Monitor fuel consumption, vehicle expenses, and efficiency metrics.</p>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Fuel Logs</h1>
+          <p className="text-sm text-gray-500 mt-1">Monitor fuel consumption and track fueling history.</p>
         </div>
         <div className="flex gap-3">
           <button className="btn-secondary">
@@ -125,11 +133,11 @@ export default function FuelExpenses() {
             <thead className="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
               <tr>
                 <th className="px-6 py-4">Vehicle</th>
+                <th className="px-6 py-4">Trip</th>
                 <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Odometer (km)</th>
                 <th className="px-6 py-4">Volume (Liters)</th>
                 <th className="px-6 py-4">Cost ($)</th>
-                <th className="px-6 py-4">Rate ($/L)</th>
+                <th className="px-6 py-4">Fuel Station</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
@@ -139,17 +147,16 @@ export default function FuelExpenses() {
                 <tr><td colSpan="6" className="text-center py-8 text-gray-500">No logs found.</td></tr>
               ) : (
                 logs.map((log) => {
-                  const rate = log.liters > 0 ? (log.cost / log.liters).toFixed(2) : '0.00';
                   return (
                     <tr key={log._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-900">
                         {log.vehicle?.registrationNumber || 'Unknown Vehicle'}
                       </td>
+                      <td className="px-6 py-4 text-gray-600">{log.trip?.tripNumber || 'Unknown Trip'}</td>
                       <td className="px-6 py-4 text-gray-600">{new Date(log.date).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 font-mono text-gray-600">{log.odometerReading?.toLocaleString() || '-'}</td>
-                      <td className="px-6 py-4 text-blue-600 font-medium">{log.liters} L</td>
-                      <td className="px-6 py-4 text-red-600 font-medium">${log.cost}</td>
-                      <td className="px-6 py-4 text-gray-500">${rate}</td>
+                      <td className="px-6 py-4 text-blue-600 font-medium">{log.fuelQuantity} L</td>
+                      <td className="px-6 py-4 text-red-600 font-medium">${log.totalCost}</td>
+                      <td className="px-6 py-4 text-gray-500">{log.fuelStation}</td>
                     </tr>
                   )
                 })
@@ -173,20 +180,49 @@ export default function FuelExpenses() {
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                  <input type="date" {...register("date", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle</label>
+                  <select {...register("vehicle", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary">
+                    <option value="">Select Vehicle</option>
+                    {vehicles.map(v => (
+                      <option key={v._id} value={v._id}>{v.registrationNumber} ({v.brand} {v.model})</option>
+                    ))}
+                  </select>
+                  {errors.vehicle && <span className="text-xs text-red-500">Required</span>}
                 </div>
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Odometer Reading (km)</label>
-                  <input type="number" {...register("odometerReading", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Trip</label>
+                  <select {...register("trip", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary">
+                    <option value="">Select Trip</option>
+                    {trips.map(t => (
+                      <option key={t._id} value={t._id}>{t.tripNumber} ({t.source} → {t.destination})</option>
+                    ))}
+                  </select>
+                  {errors.trip && <span className="text-xs text-red-500">Required</span>}
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <input type="date" {...register("date", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  {errors.date && <span className="text-xs text-red-500">Required</span>}
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Fuel Station</label>
+                  <input {...register("fuelStation", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. Shell" />
+                  {errors.fuelStation && <span className="text-xs text-red-500">Required</span>}
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Volume (Liters)</label>
-                  <input type="number" step="0.01" {...register("liters", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <input type="number" step="0.01" {...register("fuelQuantity", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  {errors.fuelQuantity && <span className="text-xs text-red-500">Required</span>}
                 </div>
                 <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Price per Liter ($)</label>
+                  <input type="number" step="0.01" {...register("fuelPricePerLiter", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  {errors.fuelPricePerLiter && <span className="text-xs text-red-500">Required</span>}
+                </div>
+                <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Total Cost ($)</label>
-                  <input type="number" step="0.01" {...register("cost", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <input type="number" step="0.01" {...register("totalCost", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  {errors.totalCost && <span className="text-xs text-red-500">Required</span>}
                 </div>
               </div>
 

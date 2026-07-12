@@ -22,12 +22,11 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center transition-all shadow-sm;
+    @apply bg-black text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition-all shadow-sm;
   }
 
   .btn-primary:hover {
-    background-color: #1D4ED8;
-    /* primaryHover */
+    @apply bg-gray-800;
   }
 
   .btn-primary:active {
@@ -57,6 +56,11 @@
 
   .card {
     @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+  }
+
+  /* Bottom Sheet (Uber-style) */
+  .bottom-sheet {
+    @apply bg-white rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] z-20 px-4 pt-4 pb-6;
   }
 
   /* Status Badges */

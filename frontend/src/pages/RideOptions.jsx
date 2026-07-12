@@ -17,18 +17,7 @@ const RideOptions = () => {
     }
 
     if (availableVehicles && availableVehicles.length > 0) {
-      const types = [];
-      const map = new Map();
-      for (const item of availableVehicles) {
-        if(!map.has(item.vehicleType)){
-            map.set(item.vehicleType, true);
-            types.push({
-                ...item,
-                price: Math.floor(item.maxLoadCapacity * 1.5 + 500),
-                eta: Math.floor(Math.random() * 15 + 5) + ' min'
-            });
-        }
-      }
+      const types = availableVehicles; // Already have price and eta in mock data
       types.sort((a,b) => a.price - b.price);
       setUniqueVehicleTypes(types);
       if(types.length > 0 && !selectedVehicleType) {
@@ -49,7 +38,7 @@ const RideOptions = () => {
 
   const handleConfirm = () => {
     if (selectedVehicleType) {
-      navigate('/searching');
+      navigate('/driver-searching');
     }
   };
 

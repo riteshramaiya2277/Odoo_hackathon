@@ -15,12 +15,18 @@ export const TripProvider = ({ children }) => {
 
   const fetchAvailableOptions = async () => {
     try {
-      const [vehiclesRes, driversRes] = await Promise.all([
-        api.get('/vehicles'),
-        api.get('/drivers')
+      // Use mock data for demo purposes (since vehicles/drivers APIs are admin-only)
+      setAvailableVehicles([
+        { _id: '1', vehicleName: 'UberX', vehicleType: 'economy', brand: 'Toyota', model: 'Camry', capacity: 4, capacityKg: 500, registrationNumber: 'UBER-123', status: 'Available', price: 150, eta: '5 min' },
+        { _id: '2', vehicleName: 'UberXL', vehicleType: 'comfort', brand: 'Honda', model: 'Odyssey', capacity: 6, capacityKg: 800, registrationNumber: 'UBER-456', status: 'Available', price: 250, eta: '8 min' },
+        { _id: '3', vehicleName: 'UberBlack', vehicleType: 'premium', brand: 'Mercedes', model: 'E-Class', capacity: 4, capacityKg: 400, registrationNumber: 'UBER-789', status: 'Available', price: 400, eta: '12 min' }
       ]);
-      setAvailableVehicles(vehiclesRes.data.filter(v => v.status === 'Available'));
-      setAvailableDrivers(driversRes.data.filter(d => d.status === 'Available'));
+      
+      setAvailableDrivers([
+        { _id: '1', name: 'John Smith', experience: 5, status: 'Available', rating: 4.9, safetyScore: 95 },
+        { _id: '2', name: 'Sarah Johnson', experience: 3, status: 'Available', rating: 4.8, safetyScore: 90 },
+        { _id: '3', name: 'Mike Wilson', experience: 7, status: 'Available', rating: 5.0, safetyScore: 98 }
+      ]);
     } catch (error) {
       console.error('Error fetching options:', error);
     }

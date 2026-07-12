@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
       id: user._id,
       fullName: user.name,
       email: user.email,
-      role: user.role.name,
+      role: user.role,
       phone: user.phone
     });
   } catch (err) {
@@ -64,7 +64,7 @@ router.post('/register', async (req, res) => {
       id: newUser._id,
       fullName: newUser.name,
       email: newUser.email,
-      role: foundRole.name,
+      role: foundRole,
       phone: newUser.phone
     });
   } catch (err) {
@@ -89,7 +89,7 @@ router.get('/me', async (req, res) => {
       id: user._id,
       fullName: user.name,
       email: user.email,
-      role: user.role.name,
+      role: user.role,
       phone: user.phone
     });
   } catch (err) {

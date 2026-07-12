@@ -88,7 +88,7 @@ const DriverAssigned = () => {
           </button>
           <button 
             className="flex-1 btn-primary"
-            onClick={() => navigate('/tracking')}
+            onClick={() => navigate('/ride-tracking')}
           >
             Start Ride
           </button>

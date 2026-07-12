@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Vehicle = require('../models/Vehicle');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// GET all vehicles
-router.get('/', async (req, res) => {
+// GET all vehicles - Admin only
+router.get('/', auth, adminAuth, async (req, res) => {
   try {
     const vehicles = await Vehicle.find().populate('assignedDriver').populate('createdBy');
     res.json(vehicles);
@@ -12,8 +13,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single vehicle
-router.get('/:id', async (req, res) => {
+// GET single vehicle - Admin only
+router.get('/:id', auth, adminAuth, async (req, res) => {
   try {
     const vehicle = await Vehicle.findById(req.params.id).populate('assignedDriver').populate('createdBy');
     if (!vehicle) return res.status(404).json({ message: 'Vehicle not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new vehicle
-router.post('/', async (req, res) => {
+// POST new vehicle - Admin only
+router.post('/', auth, adminAuth, async (req, res) => {
   const vehicle = new Vehicle(req.body);
   try {
     const newVehicle = await vehicle.save();
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update vehicle
-router.put('/:id', async (req, res) => {
+// PUT update vehicle - Admin only
+router.put('/:id', auth, adminAuth, async (req, res) => {
   try {
     const updatedVehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedVehicle) return res.status(404).json({ message: 'Vehicle not found' });
@@ -45,8 +46,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE vehicle
-router.delete('/:id', async (req, res) => {
+// DELETE vehicle - Admin only
+router.delete('/:id', auth, adminAuth, async (req, res) => {
   try {
     const vehicle = await Vehicle.findByIdAndDelete(req.params.id);
     if (!vehicle) return res.status(404).json({ message: 'Vehicle not found' });

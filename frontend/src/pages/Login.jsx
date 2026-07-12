@@ -6,13 +6,13 @@ import useAuth from '../hooks/useAuth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const { login, user } = useAuth(); // Also get user
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -21,10 +21,11 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      await login(email, password);
-      navigate('/home');
+      const userData = await login(email, password); // Get the returned user data
+      // Navigate to dashboard if admin, otherwise home
+      navigate(userData.role?.name === 'Admin' ? '/dashboard' : '/home');
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid credentials');
+      setError(err.response?.data?.message || 'Invalid credentials'); // Changed from error to message
     } finally {
       setLoading(false);
     }

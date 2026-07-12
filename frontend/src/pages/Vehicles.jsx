@@ -112,7 +112,7 @@ export default function Vehicles() {
                       <div className="text-gray-900">{v.brand} {v.model}</div>
                       <div className="text-xs text-gray-500">{v.year}</div>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{v.maxLoadCapacity || 'N/A'} kg</td>
+                    <td className="px-6 py-4 text-gray-600">{v.capacityKg || 'N/A'} kg</td>
                     <td className="px-6 py-4 font-mono text-gray-600">{v.odometer?.toLocaleString()} km</td>
                     <td className="px-6 py-4">{getStatusBadge(v.status)}</td>
                     <td className="px-6 py-4 text-right">
@@ -158,7 +158,7 @@ export default function Vehicles() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Max Load Capacity (kg)</label>
-                  <input type="number" {...register("maxLoadCapacity")} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <input type="number" {...register("capacityKg")} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Initial Odometer (km)</label>

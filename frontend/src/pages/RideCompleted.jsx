@@ -21,7 +21,7 @@ const RideCompleted = () => {
     );
   }
 
-  const fare = Math.floor(assignedVehicle?.maxLoadCapacity * 1.5 + 500) || 450;
+  const fare = assignedVehicle?.price || 450;
   
   return (
     <div className="min-h-screen bg-white p-6 flex flex-col justify-between">

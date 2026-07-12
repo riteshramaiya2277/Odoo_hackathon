@@ -116,7 +116,7 @@ export default function Drivers() {
                 drivers.map((d) => {
                   const score = d.safetyScore || 100;
                   const scoreColor = score >= 90 ? 'bg-green-500' : score >= 75 ? 'bg-amber-500' : 'bg-red-500';
-                  const expiring = isLicenseExpiringSoon(d.licenseExpiryDate);
+                  const expiring = isLicenseExpiringSoon(d.licenseExpiry);
 
                   return (
                     <tr key={d._id} className="hover:bg-gray-50 transition-colors">
@@ -130,10 +130,10 @@ export default function Drivers() {
                         <div className="text-gray-900 font-mono text-xs">{d.licenseNumber}</div>
                         <div className={`text-xs mt-1 flex items-center gap-1 ${expiring ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
                           {expiring && <AlertTriangle className="w-3 h-3" />}
-                          Expires: {new Date(d.licenseExpiryDate).toLocaleDateString()}
+                          Expires: {new Date(d.licenseExpiry).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-600">{d.contactNumber}</td>
+                      <td className="px-6 py-4 text-gray-600">{d.phone}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-900 w-8">{score}</span>
@@ -179,11 +179,11 @@ export default function Drivers() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">License Expiry</label>
-                  <input type="date" {...register("licenseExpiryDate", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                  <input type="date" {...register("licenseExpiry", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                  <input {...register("contactNumber", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. +1 555-1234" />
+                  <input {...register("phone", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. +1 555-1234" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Safety Score (0-100)</label>

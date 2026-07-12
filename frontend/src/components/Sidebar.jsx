@@ -65,7 +65,7 @@ export const Sidebar = () => {
           </div>
           <div className="overflow-hidden text-left">
             <h3 className="text-sm font-semibold text-white truncate">{user?.fullName || 'Guest User'}</h3>
-            <p className="text-xs text-gray-400 truncate">{user?.role || 'Fleet Manager'}</p>
+            <p className="text-xs text-gray-400 truncate">{user?.role?.name || 'Fleet Manager'}</p>
           </div>
         </div>
         <button

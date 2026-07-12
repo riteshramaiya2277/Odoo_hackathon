@@ -27,7 +27,7 @@ const Topbar = () => {
         <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
           <div className="text-right">
             <div className="text-sm font-semibold text-gray-900">{user?.fullName || 'Alex Rivera'}</div>
-            <div className="text-xs text-gray-500">{user?.role || 'Fleet Manager'}</div>
+            <div className="text-xs text-gray-500">{user?.role?.name || 'Fleet Manager'}</div>
           </div>
           <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center relative">
             <img src={`https://ui-avatars.com/api/?name=${user?.fullName || 'Alex'}&background=2563EB&color=fff`} alt="Profile" className="rounded-full w-full h-full object-cover" />

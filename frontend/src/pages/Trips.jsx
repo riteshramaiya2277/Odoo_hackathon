@@ -101,7 +101,7 @@ export default function Trips() {
                       </div>
                       <div className="flex items-center text-xs text-gray-600">
                         <MapPin className="w-3.5 h-3.5 mr-2 text-gray-400" />
-                        {trip.distanceKm || trip.plannedDistance || 0} km • {trip.cargoWeight || 0} kg
+                        {trip.distanceKm || trip.plannedDistance || 0} km • {trip.cargoWeightKg || 0} kg
                       </div>
                     </div>
 

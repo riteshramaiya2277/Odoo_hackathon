@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Trip = require('../models/Trip');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// GET all trips
-router.get('/', async (req, res) => {
+// GET all trips - Admin only
+router.get('/', auth, adminAuth, async (req, res) => {
   try {
     const trips = await Trip.find().populate('vehicle').populate('driver');
     res.json(trips);
@@ -12,8 +13,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single trip
-router.get('/:id', async (req, res) => {
+// GET single trip - Admin only
+router.get('/:id', auth, adminAuth, async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id).populate('vehicle').populate('driver');
     if (!trip) return res.status(404).json({ message: 'Trip not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new trip
-router.post('/', async (req, res) => {
+// POST new trip - Admin only
+router.post('/', auth, adminAuth, async (req, res) => {
   const trip = new Trip(req.body);
   try {
     const newTrip = await trip.save();
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update trip
-router.put('/:id', async (req, res) => {
+// PUT update trip - Admin only
+router.put('/:id', auth, adminAuth, async (req, res) => {
   try {
     const updatedTrip = await Trip.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedTrip) return res.status(404).json({ message: 'Trip not found' });
@@ -45,8 +46,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE trip
-router.delete('/:id', async (req, res) => {
+// DELETE trip - Admin only
+router.delete('/:id', auth, adminAuth, async (req, res) => {
   try {
     const trip = await Trip.findByIdAndDelete(req.params.id);
     if (!trip) return res.status(404).json({ message: 'Trip not found' });

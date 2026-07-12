@@ -11,7 +11,7 @@ const DriverSearching = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       assignDriverAndVehicle();
-      navigate('/assigned');
+      navigate('/driver-assigned');
     }, 3000);
 
     return () => clearTimeout(timer);

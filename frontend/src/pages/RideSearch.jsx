@@ -17,7 +17,7 @@ const RideSearch = () => {
   const handleSearch = () => {
     if (pickup && destination) {
       fetchAvailableOptions();
-      navigate('/options');
+      navigate('/ride-options');
     } else {
       alert("Please enter both pickup and destination");
     }
