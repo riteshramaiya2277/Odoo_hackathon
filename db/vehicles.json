@@ -28,5 +28,175 @@
     "acquisitionCost": 950000,
     "region": "Nagpur",
     "status": "In Shop"
+  },
+  {
+    "registrationNumber": "MH17GH3456",
+    "vehicleName": "Tata 407",
+    "vehicleType": "Light Truck",
+    "maxLoadCapacity": 3000,
+    "odometer": 98000,
+    "acquisitionCost": 1800000,
+    "region": "Aurangabad",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH18IJ7890",
+    "vehicleName": "Eicher Pro 2049",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 4500,
+    "odometer": 107000,
+    "acquisitionCost": 2200000,
+    "region": "Pune",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH19KL1122",
+    "vehicleName": "Tata Yodha",
+    "vehicleType": "Pickup",
+    "maxLoadCapacity": 1500,
+    "odometer": 54000,
+    "acquisitionCost": 980000,
+    "region": "Nashik",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH21MN3344",
+    "vehicleName": "BharatBenz 1623R",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 16000,
+    "odometer": 175000,
+    "acquisitionCost": 6500000,
+    "region": "Nagpur",
+    "status": "In Shop"
+  },
+  {
+    "registrationNumber": "MH22OP5566",
+    "vehicleName": "Tata Prima",
+    "vehicleType": "Heavy Truck",
+    "maxLoadCapacity": 19000,
+    "odometer": 132000,
+    "acquisitionCost": 8500000,
+    "region": "Mumbai",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH23QR7788",
+    "vehicleName": "Ashok Leyland Dost",
+    "vehicleType": "Light Truck",
+    "maxLoadCapacity": 3150,
+    "odometer": 62000,
+    "acquisitionCost": 1750000,
+    "region": "Ahmedabad",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH24ST9900",
+    "vehicleName": "Mahindra Jeeto",
+    "vehicleType": "Mini Truck",
+    "maxLoadCapacity": 700,
+    "odometer": 28000,
+    "acquisitionCost": 620000,
+    "region": "Nashik",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH25UV1123",
+    "vehicleName": "Tata Signa",
+    "vehicleType": "Heavy Truck",
+    "maxLoadCapacity": 18000,
+    "odometer": 141000,
+    "acquisitionCost": 7800000,
+    "region": "Pune",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH26WX3456",
+    "vehicleName": "Ashok Leyland Ecomet",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 7000,
+    "odometer": 89000,
+    "acquisitionCost": 3200000,
+    "region": "Raigad",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH27YZ5678",
+    "vehicleName": "Mahindra Jeeto Plus",
+    "vehicleType": "Mini Truck",
+    "maxLoadCapacity": 800,
+    "odometer": 36000,
+    "acquisitionCost": 680000,
+    "region": "Goa",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH28AB9011",
+    "vehicleName": "Tata LPT 1613",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 8000,
+    "odometer": 101000,
+    "acquisitionCost": 4100000,
+    "region": "Nagpur",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH29CD2233",
+    "vehicleName": "Eicher Pro 3015",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 12000,
+    "odometer": 125000,
+    "acquisitionCost": 5200000,
+    "region": "Chennai",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH30EF4455",
+    "vehicleName": "Tata Ultra",
+    "vehicleType": "Heavy Truck",
+    "maxLoadCapacity": 15000,
+    "odometer": 98000,
+    "acquisitionCost": 5900000,
+    "region": "Nagpur",
+    "status": "In Shop"
+  },
+  {
+    "registrationNumber": "MH31GH6677",
+    "vehicleName": "BharatBenz Pro 1110",
+    "vehicleType": "Light Truck",
+    "maxLoadCapacity": 2800,
+    "odometer": 52000,
+    "acquisitionCost": 1900000,
+    "region": "Pune",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH32IJ8899",
+    "vehicleName": "Mahindra Bolero",
+    "vehicleType": "Pickup",
+    "maxLoadCapacity": 1100,
+    "odometer": 61000,
+    "acquisitionCost": 910000,
+    "region": "Mumbai",
+    "status": "Available"
+  },
+  {
+    "registrationNumber": "MH33KL0011",
+    "vehicleName": "Tata Yodha 6-Wheeler",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 6000,
+    "odometer": 76000,
+    "acquisitionCost": 3050000,
+    "region": "Ahmedabad",
+    "status": "On Trip"
+  },
+  {
+    "registrationNumber": "MH34MN2234",
+    "vehicleName": "Ashok Leyland 2518",
+    "vehicleType": "Truck",
+    "maxLoadCapacity": 10000,
+    "odometer": 112000,
+    "acquisitionCost": 4700000,
+    "region": "Nagpur",
+    "status": "Available"
   }
 ]
