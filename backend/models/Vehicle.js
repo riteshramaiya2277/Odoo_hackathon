@@ -3,42 +3,58 @@ const mongoose = require('mongoose');
 const vehicleSchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
-    required: [true, 'Please add a registration number'],
-    unique: true,
-    trim: true
-  },
-  vehicleName: {
-    type: String,
-    required: [true, 'Please add a vehicle name/model']
+    required: true
   },
   vehicleType: {
     type: String,
-    required: [true, 'Please select a vehicle type'],
-    enum: ['Truck', 'Van', 'Car', 'Semi-Trailer', 'Refrigerated']
+    required: true
   },
-  maxLoadCapacity: {
+  brand: {
+    type: String,
+    required: true
+  },
+  model: {
+    type: String,
+    required: true
+  },
+  year: {
     type: Number,
-    required: [true, 'Please specify max load capacity in kg']
+    required: true
+  },
+  capacityKg: {
+    type: Number,
+    required: true
+  },
+  fuelType: {
+    type: String,
+    required: true
   },
   odometer: {
     type: Number,
-    default: 0
-  },
-  region: {
-    type: String,
     required: true
   },
   status: {
     type: String,
-    enum: ['Available', 'On Trip', 'In Shop', 'Suspended', 'Retired'],
-    default: 'Available'
+    required: true
   },
-  imageUrl: {
+  insuranceExpiry: {
     type: String,
-    default: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7'
+    required: true
+  },
+  fitnessExpiry: {
+    type: String,
+    required: true
+  },
+  assignedDriver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Driver',
+    default: null
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
-}, {
-  timestamps: true
 });
 
 module.exports = mongoose.model('Vehicle', vehicleSchema);

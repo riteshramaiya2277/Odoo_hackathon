@@ -1,49 +1,64 @@
 const mongoose = require('mongoose');
 
 const tripSchema = new mongoose.Schema({
-  source: {
-    type: String,
-    required: [true, 'Please add source location']
-  },
-  destination: {
-    type: String,
-    required: [true, 'Please add destination location']
-  },
-  cargoWeight: {
-    type: Number,
-    required: [true, 'Please specify cargo weight in kg']
-  },
-  cargoType: {
+  tripNumber: {
     type: String,
     required: true
-  },
-  plannedDistance: {
-    type: Number,
-    required: true
-  },
-  actualDistance: {
-    type: Number
   },
   vehicle: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle',
     required: true
   },
   driver: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Driver',
     required: true
   },
-  tripStatus: {
+  source: {
     type: String,
-    enum: ['Draft', 'Dispatched', 'In Progress', 'Completed', 'Cancelled'],
-    default: 'Draft'
+    required: true
   },
-  remarks: {
-    type: String
+  destination: {
+    type: String,
+    required: true
+  },
+  cargoWeightKg: {
+    type: Number,
+    required: true
+  },
+  distanceKm: {
+    type: Number,
+    required: true
+  },
+  fuelUsed: {
+    type: Number,
+    required: true
+  },
+  fuelCost: {
+    type: Number,
+    required: true
+  },
+  tollCost: {
+    type: Number,
+    required: true
+  },
+  otherExpense: {
+    type: Number,
+    required: true
+  },
+  operationalCost: {
+    type: Number,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true
+  },
+  startDate: {
+    type: String,
+    required: true
   }
-}, {
-  timestamps: true
 });
 
 module.exports = mongoose.model('Trip', tripSchema);

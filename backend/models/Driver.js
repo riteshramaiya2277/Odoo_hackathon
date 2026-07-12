@@ -3,42 +3,32 @@ const mongoose = require('mongoose');
 const driverSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please add driver name']
+    required: true
   },
   licenseNumber: {
     type: String,
-    required: [true, 'Please add license number'],
-    unique: true
+    required: true
   },
-  licenseCategory: {
+  licenseExpiry: {
     type: String,
     required: true
   },
-  licenseExpiryDate: {
-    type: Date,
-    required: [true, 'Please add license expiry date']
-  },
-  contactNumber: {
+  phone: {
     type: String,
     required: true
   },
-  safetyScore: {
+  experience: {
     type: Number,
-    min: 0,
-    max: 100,
-    default: 100
+    required: true
   },
   status: {
     type: String,
-    enum: ['Active', 'On Trip', 'Suspended', 'Leave'],
-    default: 'Active'
+    required: true
   },
-  hoursWorked: {
-    type: Number,
-    default: 0
+  address: {
+    type: String,
+    required: true
   }
-}, {
-  timestamps: true
 });
 
 module.exports = mongoose.model('Driver', driverSchema);

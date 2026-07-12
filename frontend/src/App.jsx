@@ -16,6 +16,7 @@ import DriverAssigned from './pages/DriverAssigned';
 import RideTracking from './pages/RideTracking';
 import RideCompleted from './pages/RideCompleted';
 import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/tracking" element={<RideTracking />} />
             <Route path="/completed" element={<RideCompleted />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
