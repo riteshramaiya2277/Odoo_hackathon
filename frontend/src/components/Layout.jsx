@@ -1,212 +1,56 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaSearch, FaBell } from 'react-icons/fa';
-import { LuLayoutDashboard, LuTruck, LuUser, LuMap, LuWrench, LuFileText, LuSettings, LuLogOut } from 'react-icons/lu';
+import { Sidebar } from './Sidebar';
+import { Outlet } from 'react-router-dom';
+import { Search, Bell } from 'lucide-react';
+import useAuth from '../hooks/useAuth';
 
-function Sidebar() {
-  const location = useLocation();
-
-  const navItems = [
-    { path: '/', icon: LuLayoutDashboard, label: 'Dashboard' },
-    { path: '/vehicles', icon: LuTruck, label: 'Vehicles' },
-    { path: '/drivers', icon: LuUser, label: 'Drivers' },
-    { path: '/trips', icon: LuMap, label: 'Trips' },
-    { path: '/maintenance', icon: LuWrench, label: 'Maintenance' },
-    { path: '/reports', icon: LuFileText, label: 'Reports' },
-    { path: '/settings', icon: LuSettings, label: 'Settings' }
-  ];
+const Topbar = () => {
+  const { user } = useAuth();
 
   return (
-    <aside style={{
-      width: '260px',
-      backgroundColor: 'var(--card-background)',
-      borderRight: '1px solid var(--border-color)',
-      height: '100vh',
-      position: 'fixed',
-      left: 0,
-      top: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      zIndex: 10
-    }}>
-      <div style={{
-        padding: '1.5rem',
-        borderBottom: '1px solid var(--border-color)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem'
-      }}>
-        <div style={{
-          width: '32px',
-          height: '32px',
-          backgroundColor: 'var(--primary-color)',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white'
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
-        </div>
-        <h1 style={{ fontSize: '1.25rem', margin: 0, color: 'var(--primary-color)', fontWeight: 700 }}>TransitOps</h1>
-      </div>
-      <nav style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.path || (location.pathname !== '/' && item.path !== '/' && location.pathname.startsWith(item.path));
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.75rem 1rem',
-                borderRadius: 'var(--border-radius)',
-                color: isActive ? 'var(--primary-color)' : 'var(--text-secondary)',
-                backgroundColor: isActive ? 'rgba(30, 58, 138, 0.08)' : 'transparent',
-                fontWeight: isActive ? 600 : 500,
-                textDecoration: 'none',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = 'var(--background-color)';
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
-              }}
-            >
-              <Icon size={20} />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div style={{ padding: '1rem', borderTop: '1px solid var(--border-color)' }}>
-        <button className="outline" style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          border: 'none',
-          padding: '0.75rem 1rem',
-          color: 'var(--text-secondary)',
-          textAlign: 'left'
-        }}>
-          <LuLogOut size={20} />
-          <span>Collapse</span>
-        </button>
-      </div>
-    </aside>
-  );
-}
-
-function Topbar() {
-  return (
-    <header style={{
-      height: '72px',
-      backgroundColor: 'var(--card-background)',
-      borderBottom: '1px solid var(--border-color)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 2rem',
-      position: 'sticky',
-      top: 0,
-      zIndex: 5
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: 'var(--background-color)',
-        borderRadius: 'var(--border-radius)',
-        padding: '0.5rem 1rem',
-        width: '400px'
-      }}>
-        <FaSearch color="var(--text-secondary)" size={14} />
+    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-10">
+      <div className="flex items-center bg-gray-50 rounded-lg px-4 py-2 w-96 border border-gray-100">
+        <Search className="w-4 h-4 text-gray-400" />
         <input
           type="text"
           placeholder="Search fleet, drivers, or trips..."
-          style={{
-            border: 'none',
-            backgroundColor: 'transparent',
-            outline: 'none',
-            marginLeft: '0.5rem',
-            width: '100%',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem'
-          }}
+          className="bg-transparent border-none outline-none ml-2 w-full text-sm text-gray-700 placeholder-gray-400"
         />
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-        <button style={{
-          background: 'none',
-          border: 'none',
-          padding: 0,
-          color: 'var(--text-secondary)',
-          position: 'relative',
-          cursor: 'pointer'
-        }}>
-          <FaBell size={18} />
-          <span style={{
-            position: 'absolute',
-            top: '-2px',
-            right: '-2px',
-            width: '8px',
-            height: '8px',
-            backgroundColor: 'var(--danger-color)',
-            borderRadius: '50%',
-            border: '2px solid var(--card-background)'
-          }}></span>
+      <div className="flex items-center gap-6">
+        <button className="relative text-gray-500 hover:text-gray-700 transition-colors">
+          <Bell className="w-5 h-5" />
+          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '1.5rem', borderLeft: '1px solid var(--border-color)' }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>Alex Rivera</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Fleet Manager</div>
+        <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
+          <div className="text-right">
+            <div className="text-sm font-semibold text-gray-900">{user?.fullName || 'Alex Rivera'}</div>
+            <div className="text-xs text-gray-500">{user?.role || 'Fleet Manager'}</div>
           </div>
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--primary-accent)',
-            backgroundImage: 'url("https://i.pravatar.cc/150?u=alex")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            position: 'relative'
-          }}>
-            <div style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '10px',
-              height: '10px',
-              backgroundColor: 'var(--success-color)',
-              borderRadius: '50%',
-              border: '2px solid var(--card-background)'
-            }}></div>
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center relative">
+            <img src={`https://ui-avatars.com/api/?name=${user?.fullName || 'Alex'}&background=2563EB&color=fff`} alt="Profile" className="rounded-full w-full h-full object-cover" />
+            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
         </div>
       </div>
     </header>
   );
-}
+};
 
-export default function Layout({ children }) {
+export const Layout = () => {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--background-color)' }}>
+    <div className="dashboard-layout">
       <Sidebar />
-      <div style={{ flex: 1, marginLeft: '260px', display: 'flex', flexDirection: 'column' }}>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50">
         <Topbar />
-        <main style={{ padding: '2rem' }}>
-          {children}
+        <main className="flex-1 overflow-y-auto p-8 relative">
+          <Outlet />
         </main>
       </div>
     </div>
   );
-}
+};
+
+export default Layout;

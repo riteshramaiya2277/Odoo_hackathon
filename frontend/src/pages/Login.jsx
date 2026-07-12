@@ -83,8 +83,9 @@ const Login = () => {
       {/* Demo Credentials Helper */}
       <div className="mt-8 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
         <p className="font-bold mb-1">Demo Credentials:</p>
-        <p>Email: <b>fleet@transitops.com</b></p>
-        <p>Password: <b>$2b$10$hashedpassword</b></p>
+        <p>Admin: <b>admin@transitops.com</b> / <b>password123</b></p>
+        <p>Manager: <b>manager@transitops.com</b> / <b>password123</b></p>
+        <p>Driver: <b>driver@transitops.com</b> / <b>password123</b></p>
       </div>
     </div>
   );

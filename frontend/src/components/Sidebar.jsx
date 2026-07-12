@@ -1,91 +1,81 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { 
-  User, LayoutDashboard, Route, Truck, 
-  Users, Droplet, Wrench, FileText, LogOut 
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  LayoutDashboard, Route, Truck,
+  Users, Droplet, Wrench, FileText, Settings, LogOut, Navigation
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
 
-export const Sidebar = ({ isOpen, onClose }) => {
+export const Sidebar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
-    navigate('/welcome');
+    navigate('/login');
   };
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Route, label: 'Trips', path: '/trips' },
     { icon: Truck, label: 'Vehicles', path: '/vehicles' },
     { icon: Users, label: 'Drivers', path: '/drivers' },
-    { icon: Droplet, label: 'Fuel Expenses', path: '/fuel' },
+    { icon: Route, label: 'Trips', path: '/trips' },
     { icon: Wrench, label: 'Maintenance', path: '/maintenance' },
+    { icon: Droplet, label: 'Fuel & Expenses', path: '/fuel' },
     { icon: FileText, label: 'Reports', path: '/reports' },
+    { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-40"
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed top-0 left-0 bottom-0 w-3/4 max-w-sm bg-white z-50 shadow-2xl flex flex-col overflow-hidden"
-          >
-            {/* Header */}
-            <div 
-              className="p-6 bg-black text-white flex items-center gap-4 cursor-pointer hover:bg-gray-900 transition-colors"
-              onClick={() => { onClose(); navigate('/profile'); }}
+    <div className="w-64 bg-secondary text-white h-screen flex flex-col flex-shrink-0 shadow-xl">
+      {/* Logo Area */}
+      <div className="h-16 flex items-center px-6 border-b border-gray-800 bg-gray-900">
+        <Navigation className="w-6 h-6 text-primary mr-3" />
+        <h1 className="text-xl font-bold tracking-tight text-white">Transit<span className="text-primary">Ops</span></h1>
+      </div>
+
+      {/* Menu Items */}
+      <div className="flex-1 overflow-y-auto py-6 px-3 space-y-1 hide-scrollbar">
+        {menuItems.map((item, index) => {
+          const isActive = location.pathname.startsWith(item.path);
+          return (
+            <button
+              key={index}
+              onClick={() => navigate(item.path)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isActive
+                  ? 'bg-primary text-white font-semibold shadow-sm'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                }`}
             >
-              <div className="bg-gray-800 p-2 rounded-full border-2 border-gray-700">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold tracking-tight">{user?.fullName || 'Guest User'}</h2>
-                <p className="text-sm font-medium text-gray-400">{user?.role || 'Admin / Rider'}</p>
-              </div>
-            </div>
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm">{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-            {/* Menu Items */}
-            <div className="flex-1 py-4 overflow-y-auto hide-scrollbar">
-              <h3 className="px-6 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Fleet Management</h3>
-              {menuItems.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => { onClose(); navigate(item.path); }}
-                  className="w-full flex items-center gap-4 px-6 py-3.5 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <item.icon className="w-5 h-5 text-gray-600" />
-                  <span className="text-base font-semibold text-gray-800">{item.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 border-t border-gray-100 bg-white">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors rounded-xl font-semibold"
-              >
-                <LogOut className="w-5 h-5" />
-                <span>Log out</span>
-              </button>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+      {/* User Profile Footer */}
+      <div className="p-4 border-t border-gray-800">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 border border-gray-600">
+            <span className="font-bold text-white text-sm">
+              {user ? user.fullName?.charAt(0) : 'U'}
+            </span>
+          </div>
+          <div className="overflow-hidden text-left">
+            <h3 className="text-sm font-semibold text-white truncate">{user?.fullName || 'Guest User'}</h3>
+            <p className="text-xs text-gray-400 truncate">{user?.role || 'Fleet Manager'}</p>
+          </div>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>Sign out</span>
+        </button>
+      </div>
+    </div>
   );
 };

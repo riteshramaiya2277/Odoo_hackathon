@@ -1,85 +1,204 @@
-import { useState, useEffect } from 'react';
-import apiClient from '../api/axiosClient';
+import React, { useState, useEffect } from 'react';
+import { Download, Plus, Search, Filter, AlertTriangle, ShieldCheck, X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import api from '../services/api';
 
-function Drivers() {
+export default function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+  const fetchDrivers = async () => {
+    try {
+      const res = await api.get('/drivers');
+      setDrivers(res.data);
+    } catch (error) {
+      console.error('Error fetching drivers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDrivers = async () => {
-      try {
-        const res = await apiClient.get('/drivers');
-        setDrivers(res.data);
-      } catch (error) {
-        console.error('Error fetching drivers:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchDrivers();
   }, []);
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <div style={{ fontSize: '1.25rem', color: 'var(--text-secondary)' }}>Loading...</div>
-      </div>
-    );
-  }
+  const onSubmit = async (data) => {
+    try {
+      await api.post('/drivers', data);
+      setIsModalOpen(false);
+      reset();
+      fetchDrivers();
+    } catch (err) {
+      console.error('Failed to add driver:', err);
+      alert('Failed to add driver');
+    }
+  };
 
-  const getStatusStyles = (status) => {
-    const styles = {
-      'Available': { backgroundColor: 'rgba(16, 185, 129, 0.1)', color: 'var(--success-color)' },
-      'On Trip': { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning-color)' },
-      'Off Duty': { backgroundColor: 'rgba(100, 116, 139, 0.1)', color: 'var(--secondary-color)' },
-      'Suspended': { backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger-color)' }
-    };
-    return styles[status] || styles['Available'];
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'Available': return <span className="badge badge-green">Available</span>;
+      case 'On Trip': return <span className="badge badge-blue">On Trip</span>;
+      case 'Off Duty': return <span className="badge px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border bg-gray-50 text-gray-600 border-gray-200">Off Duty</span>;
+      case 'Suspended': return <span className="badge badge-red">Suspended</span>;
+      default: return <span className="badge badge-amber">{status || 'Unknown'}</span>;
+    }
+  };
+
+  const isLicenseExpiringSoon = (dateString) => {
+    if (!dateString) return false;
+    const expiry = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(expiry - now);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    return diffDays < 30 && expiry > now;
   };
 
   return (
-    <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1>Drivers</h1>
-        <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Manage your drivers</p>
+    <div className="space-y-6">
+      
+      {/* Header */}
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Driver Management</h1>
+          <p className="text-sm text-gray-500 mt-1">Manage personnel, track safety scores, and monitor licenses.</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="btn-secondary">
+            <Download className="w-4 h-4 mr-2" /> Export CSV
+          </button>
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" /> Add Driver
+          </button>
+        </div>
       </div>
 
-      <div style={{ backgroundColor: 'var(--card-background)', borderRadius: '1rem', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: 'var(--background-color)' }}>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>License Number</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>License Category</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>License Expiry Date</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact Number</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Safety Score</th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {drivers.map((driver, index) => (
-              <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.2s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--background-color)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.name}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.licenseNumber}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.licenseCategory}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.licenseExpiryDate}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.contactNumber}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>{driver.safetyScore}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0.375rem 0.75rem', borderRadius: '0.5rem', fontSize: '0.75rem', fontWeight: 600, ...getStatusStyles(driver.status) }}>
-                    {driver.status}
-                  </span>
-                </td>
+      {/* Main Table Card */}
+      <div className="card p-0 overflow-hidden">
+        {/* Filter Bar */}
+        <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
+          <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2 w-80 border border-gray-100">
+            <Search className="w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search by name or license..." 
+              className="bg-transparent border-none outline-none ml-2 w-full text-sm"
+            />
+          </div>
+          <div className="flex gap-4 items-center text-sm text-gray-600">
+            <button className="flex items-center gap-1 hover:text-gray-900"><Filter className="w-4 h-4"/> Status</button>
+            <div className="pl-4 border-l border-gray-200 text-gray-500">
+              Showing {drivers.length} drivers
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
+              <tr>
+                <th className="px-6 py-4">Driver Name</th>
+                <th className="px-6 py-4">License Details</th>
+                <th className="px-6 py-4">Contact</th>
+                <th className="px-6 py-4">Safety Score</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {loading ? (
+                <tr><td colSpan="6" className="text-center py-8 text-gray-500">Loading drivers...</td></tr>
+              ) : drivers.length === 0 ? (
+                <tr><td colSpan="6" className="text-center py-8 text-gray-500">No drivers found.</td></tr>
+              ) : (
+                drivers.map((d) => {
+                  const score = d.safetyScore || 100;
+                  const scoreColor = score >= 90 ? 'bg-green-500' : score >= 75 ? 'bg-amber-500' : 'bg-red-500';
+                  const expiring = isLicenseExpiringSoon(d.licenseExpiryDate);
+
+                  return (
+                    <tr key={d._id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                           <img src={`https://ui-avatars.com/api/?name=${d.name}&background=random`} alt={d.name} />
+                        </div>
+                        <span className="font-semibold text-gray-900">{d.name}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-gray-900 font-mono text-xs">{d.licenseNumber}</div>
+                        <div className={`text-xs mt-1 flex items-center gap-1 ${expiring ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                          {expiring && <AlertTriangle className="w-3 h-3" />}
+                          Expires: {new Date(d.licenseExpiryDate).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600">{d.contactNumber}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-900 w-8">{score}</span>
+                          <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full ${scoreColor}`} style={{ width: `${score}%` }}></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">{getStatusBadge(d.status)}</td>
+                      <td className="px-6 py-4 text-right">
+                        <button className="text-primary hover:text-primaryHover text-sm font-medium">View Profile</button>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      {/* Add Driver Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div className="flex justify-between items-center p-6 border-b border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900">Add New Driver</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                  <input {...register("name", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. John Doe" />
+                  {errors.name && <span className="text-xs text-red-500">Required</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>
+                  <input {...register("licenseNumber", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. DL-123456" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">License Expiry</label>
+                  <input type="date" {...register("licenseExpiryDate", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                  <input {...register("contactNumber", { required: true })} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" placeholder="e.g. +1 555-1234" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Safety Score (0-100)</label>
+                  <input type="number" defaultValue="100" {...register("safetyScore")} className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-primary" />
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-3 justify-end">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Cancel</button>
+                <button type="submit" className="btn-primary">Save Driver</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-export default Drivers;
