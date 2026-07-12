@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,19 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session middleware
+app.use(session({
+  secret: 'your-secret-key-keep-it-safe-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: false, // Set to true in production with HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 // Path to db directory
 const dbDir = path.join(__dirname, '..', 'db');
@@ -235,6 +249,57 @@ const demoPageHTML = `
 </body>
 </html>
 `;
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+};
+
+// Login endpoint
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  const users = readJSONFile('users.json');
+  
+  const user = users.find(u => u.email === email && u.password === password);
+  
+  if (user) {
+    // Don't send password in response
+    const { password: _, ...userWithoutPassword } = user;
+    req.session.user = userWithoutPassword;
+    res.json({ success: true, user: userWithoutPassword });
+  } else {
+    res.status(401).json({ success: false, error: 'Invalid email or password' });
+  }
+});
+
+// Logout endpoint
+app.post('/api/auth/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Could not log out' });
+    }
+    res.clearCookie('connect.sid');
+    res.json({ success: true });
+  });
+});
+
+// Get current user
+app.get('/api/auth/me', (req, res) => {
+  if (req.session.user) {
+    res.json(req.session.user);
+  } else {
+    res.status(401).json({ error: 'Not logged in' });
+  }
+});
+
+// Test user page
+app.get('/test-user', (req, res) => {
+  res.sendFile(path.join(__dirname, 'test-user.html'));
+});
 
 // Root endpoint serves demo page
 app.get('/', (req, res) => {
