@@ -8,7 +8,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,7 +20,7 @@ app.use(session({
   secret: 'your-secret-key-keep-it-safe-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: false, // Set to true in production with HTTPS
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -263,9 +266,9 @@ const isAuthenticated = (req, res, next) => {
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   const users = readJSONFile('users.json');
-  
+
   const user = users.find(u => u.email === email && u.password === password);
-  
+
   if (user) {
     // Don't send password in response
     const { password: _, ...userWithoutPassword } = user;
@@ -292,7 +295,7 @@ app.get('/api/auth/me', (req, res) => {
   if (req.session.user) {
     res.json(req.session.user);
   } else {
-    res.status(401).json({ error: 'Not logged in' });
+    res.json(null);
   }
 });
 

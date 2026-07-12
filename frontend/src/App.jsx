@@ -1,30 +1,45 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Vehicles from './pages/Vehicles';
-import Drivers from './pages/Drivers';
-import Trips from './pages/Trips';
-import CreateTrip from './pages/CreateTrip';
-import Maintenance from './pages/Maintenance';
-import FuelExpenses from './pages/FuelExpenses';
-import Reports from './pages/Reports';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { TripProvider } from './context/TripContext';
+
+// Pages
+import Splash from './pages/Splash';
+import Welcome from './pages/Welcome';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import RideSearch from './pages/RideSearch';
+import RideOptions from './pages/RideOptions';
+import DriverSearching from './pages/DriverSearching';
+import DriverAssigned from './pages/DriverAssigned';
+import RideTracking from './pages/RideTracking';
+import RideCompleted from './pages/RideCompleted';
+import Profile from './pages/Profile';
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/vehicles" element={<Vehicles />} />
-          <Route path="/drivers" element={<Drivers />} />
-          <Route path="/trips" element={<Trips />} />
-          <Route path="/trips/new" element={<CreateTrip />} />
-          <Route path="/maintenance" element={<Maintenance />} />
-          <Route path="/fuel-expenses" element={<FuelExpenses />} />
-          <Route path="/reports" element={<Reports />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <AuthProvider>
+      <TripProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Splash />} />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/search" element={<RideSearch />} />
+            <Route path="/options" element={<RideOptions />} />
+            <Route path="/searching" element={<DriverSearching />} />
+            <Route path="/assigned" element={<DriverAssigned />} />
+            <Route path="/tracking" element={<RideTracking />} />
+            <Route path="/completed" element={<RideCompleted />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </TripProvider>
+    </AuthProvider>
   );
 }
 
